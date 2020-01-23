@@ -21,10 +21,6 @@ namespace PcRepaire
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                //var logger = services.GetRequiredService<ILogger<Program>>();
-
-                //var identity = services.GetRequiredService<UserManager<IdentityUser>>();
-
                 await DbInitializer.DbInitializerStart(services);
             }
             host.Run();

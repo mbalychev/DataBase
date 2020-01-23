@@ -41,10 +41,8 @@ namespace PcRepaire
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
+                //.AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            //services.AddDefaultIdentity<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -59,6 +57,7 @@ namespace PcRepaire
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
+
             else
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -76,7 +75,10 @@ namespace PcRepaire
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            }
+            );
+
+
         }
     }
 }

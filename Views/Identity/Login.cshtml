@@ -1,24 +1,23 @@
-﻿@page
-@model PcRepaire.Areas.Identity.Pages.Account.LoginModel
+﻿@model User
 
 
 <div class="row">
     <div class="text-block" style="max-width: 360px; margin: 0 auto;">
-        <form method="post">
+        <form method="post" asp-action="Login" asp-controller="Identity">
             <h3>Авторизация</h3>
             @*<div asp-validation-summary="All" class="text-danger"></div>*@
             <div>
-                <input asp-for="Input.Name" class="form-control" placeholder="Фамилия" />
-                <span asp-validation-for="Input.Name" class="text-danger"></span>
+                <input asp-for="Name" class="form-control" placeholder="Фамилия" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div>
-                <input asp-for="Input.Password" class="form-control" type="password" placeholder="Пароль" width="200" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                <input asp-for="Password" class="form-control" type="password" placeholder="Пароль" width="200" />
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group center-block">
                 <div class="checkbox">
-                    <label asp-for="Input.RememberMe">
-                        <input type="checkbox" asp-for="Input.RememberMe" />
+                    <label asp-for="RememberMe">
+                        <input type="checkbox" asp-for="RememberMe" />
                     </label>
                 </div>
             </div>
