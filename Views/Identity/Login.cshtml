@@ -5,7 +5,7 @@
     <div class="text-block" style="max-width: 360px; margin: 0 auto;">
         <form method="post" asp-action="Login" asp-controller="Identity">
             <h3>Авторизация</h3>
-            @*<div asp-validation-summary="All" class="text-danger"></div>*@
+            <div asp-validation-summary="All" class="text-danger"></div>
             <div>
                 <input asp-for="Name" class="form-control" placeholder="Фамилия" />
                 <span asp-validation-for="Name" class="text-danger"></span>

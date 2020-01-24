@@ -1,5 +1,3 @@
-using System;
-
 namespace PcRepaire.Models
 {
     public class ErrorViewModel

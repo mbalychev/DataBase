@@ -11,10 +11,10 @@ namespace PcRepaire.Data
 {
     public class DbInitializer
     {
-        static ApplicationDbContext _context;
-        static UserManager<IdentityUser> _userManager;
-        static ILogger _logger;
-        static RoleManager<IdentityRole> _roleManager;
+        private static ApplicationDbContext _context;
+        private static UserManager<IdentityUser> _userManager;
+        private static ILogger _logger;
+        private static RoleManager<IdentityRole> _roleManager;
 
         public static async Task DbInitializerStart(IServiceProvider services)
         {

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PcRepaire.Models
 {
@@ -12,7 +9,7 @@ namespace PcRepaire.Models
         public int Id { get; set; }
         public int PcId { get; set; }
         public int WorkerId { get; set; }
-        public bool SoftWare {get;set;}
+        public bool SoftWare { get; set; }
         public bool HardWare { get; set; }
         public DateTime Date { get; set; }
     }
