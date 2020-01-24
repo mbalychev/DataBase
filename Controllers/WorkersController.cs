@@ -4,9 +4,11 @@ using PcRepaire.Data;
 using PcRepaire.Models;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PcRepaire.Controllers
 {
+    [Authorize]
     public class WorkersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,7 +21,7 @@ namespace PcRepaire.Controllers
         // GET: Workers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Workers.ToListAsync());
+            return View(await _context.Workers. ToListAsync());
         }
 
         // GET: Workers/Details/5

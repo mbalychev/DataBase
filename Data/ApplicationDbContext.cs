@@ -28,6 +28,6 @@ namespace PcRepaire.Data
         public DbSet<SoftWare> SoftWares { get; set; }
         public DbSet<RepairList> RepairLists { get; set; }
         public DbSet<Pc> Pcs { get; set; }
-        //public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PcRepaire.Models;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace PcRepaire.Controllers
 {
+    [AllowAnonymous]
     public class IdentityController : Controller
     {
         private SignInManager<IdentityUser> _signInManager;

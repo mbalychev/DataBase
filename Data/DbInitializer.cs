@@ -84,7 +84,7 @@ namespace PcRepaire.Data
                 {
                     var workers = new Worker[]
                             {
-                new Worker { Id = 1, FirstName = "Mikhail", LastName = "Balyche"},
+                new Worker { Id = 1, FirstName = "Mikhail", LastName = "Balychev"},
                 new Worker { Id = 2, FirstName = "Ivan", LastName = "Lisin"},
                 new Worker { Id = 3, FirstName = "Petr", LastName = "Harsen"},
                 new Worker { Id = 4, FirstName = "Mikhail", LastName = "Vanshin"},
