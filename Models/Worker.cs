@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel;
 
 namespace PcRepaire.Models
 {
@@ -10,5 +13,7 @@ namespace PcRepaire.Models
         public int Id { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
+        
+        public ICollection<RepairList> RepairList { get; set; }
     }
 }

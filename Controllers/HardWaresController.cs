@@ -1,31 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PcRepaire.Data;
-using PcRepaire.Models;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using PcRepaire.Data;
+using PcRepaire.Models;
 
 namespace PcRepaire.Controllers
 {
     [Authorize]
-    public class WorkersController : Controller
+    public class HardWaresController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
-        public WorkersController(ApplicationDbContext context, ILogger<WorkersController> logger)
+
+        public HardWaresController(ApplicationDbContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
-        // GET: Workers
+        // GET: HardWares
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Workers. ToListAsync());
+            return View(await _context.HardWares.ToListAsync());
         }
 
+        // GET: HardWares/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,47 +35,42 @@ namespace PcRepaire.Controllers
                 return NotFound();
             }
 
-            var worker = await _context.Workers.Include(i=>i.RepairList).ThenInclude(p => p.Pc).AsNoTracking()
+            var hardWare = await _context.HardWares
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (worker == null)
+            if (hardWare == null)
             {
                 return NotFound();
             }
 
-            return View(worker);
+            return View(hardWare);
         }
-        
+
+        // GET: HardWares/Create
         [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             return View();
         }
 
+        // POST: HardWares/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Create([Bind("Id,LastName,FirstName")] Worker worker)
+        public async Task<IActionResult> Create([Bind("Id,HardType")] HardWare hardWare)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    _context.Add(worker);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
+                _context.Add(hardWare);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateException ex)
-            {
-                ModelState.AddModelError("", "Error update DataBase");
-                _logger.LogError("Error update DataBase 'action - create'- " + ex.Message);
-            }
-           
-            return View(worker);
+            return View(hardWare);
         }
 
-        // GET: Workers/Edit/5
-        [Authorize(Roles ="admin")]
+        // GET: HardWares/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,23 +78,23 @@ namespace PcRepaire.Controllers
                 return NotFound();
             }
 
-            var worker = await _context.Workers.FindAsync(id);
-            if (worker == null)
+            var hardWare = await _context.HardWares.FindAsync(id);
+            if (hardWare == null)
             {
                 return NotFound();
             }
-            return View(worker);
+            return View(hardWare);
         }
 
-        // POST: Workers/Edit/5
+        // POST: HardWares/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles ="admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,LastName,FirstName")] Worker worker)
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,HardType")] HardWare hardWare)
         {
-            if (id != worker.Id)
+            if (id != hardWare.Id)
             {
                 return NotFound();
             }
@@ -106,12 +103,12 @@ namespace PcRepaire.Controllers
             {
                 try
                 {
-                    _context.Update(worker);
+                    _context.Update(hardWare);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WorkerExists(worker.Id))
+                    if (!HardWareExists(hardWare.Id))
                     {
                         return NotFound();
                     }
@@ -122,10 +119,10 @@ namespace PcRepaire.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(worker);
+            return View(hardWare);
         }
 
-        // GET: Workers/Delete/5
+        // GET: HardWares/Delete/5.
         [Authorize(Roles ="admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -134,31 +131,31 @@ namespace PcRepaire.Controllers
                 return NotFound();
             }
 
-            var worker = await _context.Workers
+            var hardWare = await _context.HardWares
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (worker == null)
+            if (hardWare == null)
             {
                 return NotFound();
             }
 
-            return View(worker);
+            return View(hardWare);
         }
 
-        // POST: Workers/Delete/5
+        // POST: HardWares/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles ="admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var worker = await _context.Workers.FindAsync(id);
-            _context.Workers.Remove(worker);
+            var hardWare = await _context.HardWares.FindAsync(id);
+            _context.HardWares.Remove(hardWare);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WorkerExists(int id)
+        private bool HardWareExists(int id)
         {
-            return _context.Workers.Any(e => e.Id == id);
+            return _context.HardWares.Any(e => e.Id == id);
         }
     }
 }

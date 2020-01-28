@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel;
 
 namespace PcRepaire.Models
 {
@@ -6,6 +7,7 @@ namespace PcRepaire.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
+        [DisplayName("Type of hardware")]
         public string HardType { get; set; }
     }
 

@@ -1,10 +1,10 @@
-﻿@model IEnumerable<PcRepaire.Models.Worker>
+﻿@model IEnumerable<PcRepaire.Models.Pc>
 
 @{
-    ViewData["Title"] = "Workers";
+    ViewData["Title"] = "Pcs";
 }
 
-    <h1>Workers list</h1>
+    <h1>Personal computers list</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,10 +13,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+                @Html.DisplayNameFor(model => model.HardWareId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SoftWareId)
             </th>
             <th></th>
         </tr>
@@ -25,10 +28,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.LastName)
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
+                @Html.DisplayFor(modelItem => item.HardWare.HardType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SoftWare.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -59,14 +59,16 @@ namespace PcRepaire.Data
                 try
                 {
                     IdentityUser userAdmin = new IdentityUser { UserName = "admin" };
+
                     IdentityUser user = new IdentityUser { UserName = "user" };
 
                     await _userManager.CreateAsync(userAdmin, "qweRT23*");
+                    await _userManager.CreateAsync(user, "asdFG23*");
                     await _userManager.AddToRoleAsync(userAdmin, "admin");
-                    await _userManager.CreateAsync(user, "asdFG23");
                     await _userManager.AddToRoleAsync(user, "user");
 
                     _logger.LogInformation("users... ok");
+                    await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -92,6 +94,11 @@ namespace PcRepaire.Data
                     foreach (Worker w in workers) { _context.Workers.Add(w); }
                     await _context.SaveChangesAsync();
                     _logger.LogInformation("Worker... ok");
+
+                    using (var tr = _context.Database.BeginTransaction())
+                    {
+                        tr.Commit();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -188,16 +195,16 @@ namespace PcRepaire.Data
                 {
                     var repairList = new RepairList[]
                           {
-                new RepairList { Id = 1, PcId = 1, WorkerId = 1, Date = Convert.ToDateTime("01.01.2020"), HardWare = true, SoftWare = true  },
-                new RepairList { Id = 2, PcId = 5, WorkerId = 3, Date = Convert.ToDateTime("03.01.2020"), HardWare = true, SoftWare = false  },
-                new RepairList { Id = 3, PcId = 7, WorkerId = 4, Date = Convert.ToDateTime("03.01.2020"), HardWare = false, SoftWare = false  },
-                new RepairList { Id = 4, PcId = 2, WorkerId = 4, Date = Convert.ToDateTime("04.01.2020"), HardWare = true, SoftWare = true  },
-                new RepairList { Id = 5, PcId = 2, WorkerId = 2, Date = Convert.ToDateTime("07.01.2020"), HardWare = true, SoftWare = true },
-                new RepairList { Id = 6, PcId = 1, WorkerId = 4, Date = Convert.ToDateTime("07.01.2020"), HardWare = true, SoftWare = false  },
-                new RepairList { Id = 7, PcId = 4, WorkerId = 2, Date = Convert.ToDateTime("12.01.2020"), HardWare = false, SoftWare = false  },
-                new RepairList { Id = 8, PcId = 1, WorkerId = 1,  Date = Convert.ToDateTime("12.01.2020"), HardWare = false, SoftWare = true  },
-                new RepairList { Id = 9, PcId = 2, WorkerId = 2,   Date = Convert.ToDateTime("14.01.2020"), HardWare = true, SoftWare = true  },
-                new RepairList { Id = 10, PcId = 6, WorkerId = 3,  Date = Convert.ToDateTime("15.01.2020"), HardWare = false, SoftWare = true  }
+                new RepairList { Id = 1, PcId = 1, WorkerId = 1, Date = Convert.ToDateTime("01.01.2020"),  SoftWareRapaired = true, HardWareRapaired = true  },
+                new RepairList { Id = 2, PcId = 5, WorkerId = 3, Date = Convert.ToDateTime("03.01.2020"), HardWareRapaired = true, SoftWareRapaired = false  },
+                new RepairList { Id = 3, PcId = 7, WorkerId = 4, Date = Convert.ToDateTime("03.01.2020"), HardWareRapaired = true, SoftWareRapaired = false  },
+                new RepairList { Id = 4, PcId = 2, WorkerId = 4, Date = Convert.ToDateTime("04.01.2020"), HardWareRapaired = true, SoftWareRapaired = true  },
+                new RepairList { Id = 5, PcId = 2, WorkerId = 2, Date = Convert.ToDateTime("07.01.2020"), HardWareRapaired = true, SoftWareRapaired = true },
+                new RepairList { Id = 6, PcId = 1, WorkerId = 4, Date = Convert.ToDateTime("07.01.2020"), HardWareRapaired = true, SoftWareRapaired = false  },
+                new RepairList { Id = 7, PcId = 4, WorkerId = 2, Date = Convert.ToDateTime("12.01.2020"), HardWareRapaired = false, SoftWareRapaired = true  },
+                new RepairList { Id = 8, PcId = 1, WorkerId = 1,  Date = Convert.ToDateTime("12.01.2020"), HardWareRapaired = false, SoftWareRapaired = true  },
+                new RepairList { Id = 9, PcId = 2, WorkerId = 2,   Date = Convert.ToDateTime("14.01.2020"), HardWareRapaired = true, SoftWareRapaired = true  },
+                new RepairList { Id = 10, PcId = 6, WorkerId = 3,  Date = Convert.ToDateTime("15.01.2020"), HardWareRapaired = false, SoftWareRapaired = true  }
                           };
                     foreach (RepairList repair in repairList) { _context.Add(repair); }
                     await _context.SaveChangesAsync();

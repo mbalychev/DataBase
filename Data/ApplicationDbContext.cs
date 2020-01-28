@@ -5,15 +5,8 @@ using PcRepaire.Models;
 
 namespace PcRepaire.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
-        <IdentityUser,
-        IdentityRole,
-        string,
-        IdentityUserClaim<string>,
-        IdentityUserRole<string>,
-        IdentityUserLogin<string>,
-        IdentityRoleClaim<string>,
-        IdentityUserToken<string>>
+    public class ApplicationDbContext : IdentityDbContext <IdentityUser, IdentityRole, string, IdentityUserClaim<string>, 
+        IdentityUserRole<string>, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         private static ApplicationDbContext _context;
 
@@ -28,6 +21,5 @@ namespace PcRepaire.Data
         public DbSet<SoftWare> SoftWares { get; set; }
         public DbSet<RepairList> RepairLists { get; set; }
         public DbSet<Pc> Pcs { get; set; }
-        public DbSet<Enrollment> Enrollments { get; set; }
     }
 }

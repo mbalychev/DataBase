@@ -4,24 +4,64 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+    <h1>Details worker</h1>
 
 <div>
-    <h4>Worker</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.LastName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.LastName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FirstName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FirstName)
         </dd>
+        <dt class="col-sm-2">
+            Repaire Lists
+        </dt>
+        <dd class="col-sm-10">
+            <table class="table">
+                <tr>
+                    <th>
+                        Pc
+                    </th>
+                    <th>
+                        SoftWare
+                    </th>
+                    <th>
+                        HardWare
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                </tr>
+                @foreach (var item in Model.RepairList)
+                {
+            <tr>
+                <td>
+                    <a asp-controller="Pcs" asp-action="Details" asp-route-id="@item.Pc.Id">
+                        @Html.DisplayFor(modelItem => item.Pc.Name)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SoftWareRapaired)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HardWareRapaired)
+                </td>
+                <td>
+                    <label>@item.Date.ToShortDateString()</label>
+                </td>
+            </tr>
+                }
+            </table>
+        </dd>
+
     </dl>
 </div>
 <div>
