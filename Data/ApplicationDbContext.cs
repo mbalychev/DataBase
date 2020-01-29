@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PcRepaire.Models;
+using PcRepaire.Models.ViewModels;
 
 namespace PcRepaire.Data
 {
@@ -21,5 +22,6 @@ namespace PcRepaire.Data
         public DbSet<SoftWare> SoftWares { get; set; }
         public DbSet<RepairList> RepairLists { get; set; }
         public DbSet<Pc> Pcs { get; set; }
+        public DbSet<PcRepaire.Models.ViewModels.Statistic> Statistic { get; set; }
     }
 }

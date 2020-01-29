@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
+using System.Linq;
 
 namespace PcRepaire.Models
 {
@@ -15,5 +16,6 @@ namespace PcRepaire.Models
         public string FirstName { get; set; }
         
         public ICollection<RepairList> RepairList { get; set; }
+       
     }
 }

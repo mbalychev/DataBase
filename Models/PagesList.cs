@@ -13,6 +13,7 @@ namespace PcRepaire.Models
 
         public PagesList (List<T> items, int count, int pageIndex, int pageSize)
         {
+            
             PageIndex = pageIndex;
             PagesTotal = (int)Math.Ceiling(count / (double)pageSize);
             this.AddRange(items);

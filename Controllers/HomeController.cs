@@ -2,7 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PcRepaire.Models;
+using PcRepaire.Models.ViewModels;
 using System.Diagnostics;
+using System.Linq;
+using PcRepaire.Models.ViewModels;
+using PcRepaire.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace PcRepaire.Controllers
 {
@@ -10,9 +15,10 @@ namespace PcRepaire.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ApplicationDbContext _context;
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
+            _context = context;
             _logger = logger;
         }
 
@@ -21,15 +27,23 @@ namespace PcRepaire.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult About()
         {
-            return View();
+            //Include(s=>s.SoftWares).Include(h=>h.HardWares)
+            IQueryable<StatRepaires> statRepaires = _context.RepairLists.GroupBy(g => g.Date).Select(s => new StatRepaires { Date = s.Key, Count = s.Count()});
+            IQueryable<StatWorkers> statWorkers = StatWorkers.Create(_context.Workers.Include(w => w.RepairList));
+            
+            return View(new Statistic {  StatWorkers = statWorkers, StatRepaires = statRepaires});
         }
 
+        
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
     }
 }
