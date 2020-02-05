@@ -7,27 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PcRepaire.Data;
 using PcRepaire.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace PcRepaire.Controllers
 {
-    [Authorize]
-    public class SoftWaresController : Controller
+    public class EquipUsersController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SoftWaresController(ApplicationDbContext context)
+        public EquipUsersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: SoftWares
+        // GET: EquipUsers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.SoftWares.ToListAsync());
+            return View(await _context.EquipUsers.ToListAsync());
         }
 
-        // GET: SoftWares/Details/5
+        // GET: EquipUsers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,42 +33,39 @@ namespace PcRepaire.Controllers
                 return NotFound();
             }
 
-            var softWare = await _context.SoftWares
+            var equipUser = await _context.EquipUsers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (softWare == null)
+            if (equipUser == null)
             {
                 return NotFound();
             }
 
-            return View(softWare);
+            return View(equipUser);
         }
 
-        // GET: SoftWares/Create
-        [Authorize(Roles = "admin")]
+        // GET: EquipUsers/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: SoftWares/Create
+        // POST: EquipUsers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles ="admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name")] SoftWare softWare)
+        public async Task<IActionResult> Create([Bind("Id,LastName,FirstName")] EquipUser equipUser)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(softWare);
+                _context.Add(equipUser);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(softWare);
+            return View(equipUser);
         }
 
-        // GET: SoftWares/Edit/5
-        [Authorize(Roles ="admin")]
+        // GET: EquipUsers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -78,23 +73,22 @@ namespace PcRepaire.Controllers
                 return NotFound();
             }
 
-            var softWare = await _context.SoftWares.FindAsync(id);
-            if (softWare == null)
+            var equipUser = await _context.EquipUsers.FindAsync(id);
+            if (equipUser == null)
             {
                 return NotFound();
             }
-            return View(softWare);
+            return View(equipUser);
         }
 
-        // POST: SoftWares/Edit/5
+        // POST: EquipUsers/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles ="admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] SoftWare softWare)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,LastName,FirstName")] EquipUser equipUser)
         {
-            if (id != softWare.Id)
+            if (id != equipUser.Id)
             {
                 return NotFound();
             }
@@ -103,12 +97,12 @@ namespace PcRepaire.Controllers
             {
                 try
                 {
-                    _context.Update(softWare);
+                    _context.Update(equipUser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SoftWareExists(softWare.Id))
+                    if (!EquipUserExists(equipUser.Id))
                     {
                         return NotFound();
                     }
@@ -119,11 +113,10 @@ namespace PcRepaire.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(softWare);
+            return View(equipUser);
         }
 
-        // GET: SoftWares/Delete/5
-        [Authorize(Roles ="admin")]
+        // GET: EquipUsers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,31 +124,30 @@ namespace PcRepaire.Controllers
                 return NotFound();
             }
 
-            var softWare = await _context.SoftWares
+            var equipUser = await _context.EquipUsers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (softWare == null)
+            if (equipUser == null)
             {
                 return NotFound();
             }
 
-            return View(softWare);
+            return View(equipUser);
         }
 
-        // POST: SoftWares/Delete/5
+        // POST: EquipUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles ="admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var softWare = await _context.SoftWares.FindAsync(id);
-            _context.SoftWares.Remove(softWare);
+            var equipUser = await _context.EquipUsers.FindAsync(id);
+            _context.EquipUsers.Remove(equipUser);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SoftWareExists(int id)
+        private bool EquipUserExists(int id)
         {
-            return _context.SoftWares.Any(e => e.Id == id);
+            return _context.EquipUsers.Any(e => e.Id == id);
         }
     }
 }

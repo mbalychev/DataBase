@@ -7,15 +7,18 @@ using System.Linq;
 
 namespace PcRepaire.Models
 {
-    public class Worker
+    public class Employee
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
+        [DisplayName("Last name")]
         public string LastName { get; set; }
+        [DisplayName("First name")]
         public string FirstName { get; set; }
-        
-        public ICollection<RepairList> RepairList { get; set; }
+
+        [DisplayName("Full name")]
+        public string FullName => FirstName + " " + LastName;
        
     }
 }

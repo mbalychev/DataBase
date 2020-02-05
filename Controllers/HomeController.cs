@@ -30,8 +30,8 @@ namespace PcRepaire.Controllers
         public IActionResult About()
         {
             //Include(s=>s.SoftWares).Include(h=>h.HardWares)
-            IQueryable<StatRepaires> statRepaires = _context.RepairLists.GroupBy(g => g.Date).Select(s => new StatRepaires { Date = s.Key, Count = s.Count()});
-            IQueryable<StatWorkers> statWorkers = StatWorkers.Create(_context.Workers.Include(w => w.RepairList));
+            IQueryable<StatRepaires> statRepaires = _context.RepaireLists.GroupBy(g => g.DateRepaire).Select(s => new StatRepaires { Date = s.Key, Count = s.Count()});
+            IQueryable<StatWorkers> statWorkers = StatWorkers.Create(_context.RepaireMen.Include(w => w.RepairList));
             
             return View(new Statistic {  StatWorkers = statWorkers, StatRepaires = statRepaires});
         }

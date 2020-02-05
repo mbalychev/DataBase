@@ -17,11 +17,16 @@ namespace PcRepaire.Data
             _context = this;
         }
 
-        public DbSet<Worker> Workers { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Equipment> Equipments { get; set; }
         public DbSet<HardWare> HardWares { get; set; }
         public DbSet<SoftWare> SoftWares { get; set; }
-        public DbSet<RepairList> RepairLists { get; set; }
+        public DbSet<RepaireLists> RepaireLists { get; set; }
         public DbSet<Pc> Pcs { get; set; }
-        public DbSet<PcRepaire.Models.ViewModels.Statistic> Statistic { get; set; }
+        public DbSet<Tablet> Tablets { get; set; }
+        public DbSet<RepaireMan> RepaireMen { get; set; }
+        public DbSet<EquipUser> EquipUsers { get; set; }
+        public DbSet<Manufacture> Manufactures { get; set; }
+
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PcRepaire.Data;
 using PcRepaire.Models;
 
@@ -15,16 +16,40 @@ namespace PcRepaire.Controllers
     public class PcsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<PcsController> _logger;
 
-        public PcsController(ApplicationDbContext context)
+        public PcsController(ApplicationDbContext context, ILogger<PcsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Pcs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sort, string search)
         {
-            return View(await _context.Pcs.Include(p => p.SoftWare).Include(h => h.HardWare).ToListAsync());
+            ViewData["Sort"] = string.IsNullOrEmpty(sort) ? "ManufactureDesc" : "";
+            var pcs = _context.Pcs.Include(p => p.EquipUser).Include(p => p.Manufacture).Include(p => p.SoftWare).Include(p => p.HardWare).Select(s => s);
+            
+            if (!string.IsNullOrEmpty(search))
+            {
+                pcs = pcs.Where(n => n.SerialNumber.Contains(search));
+            }
+            
+                switch (sort)
+            {
+                case "ManufactureDesc":
+                    {
+                        pcs = pcs.OrderByDescending(o => o.Manufacture.Name);
+                        break;
+                    }
+                default:
+                    {
+                        pcs = pcs.OrderBy(o => o.Manufacture.Name);
+                        break;
+                    }
+            }
+            //pcs.Include(p => p.EquipUser).Include(p => p.Manufacture).Include(p => p.SoftWare).Include(p => p.HardWare);
+            return View(await pcs.ToListAsync());
         }
 
         // GET: Pcs/Details/5
@@ -35,20 +60,28 @@ namespace PcRepaire.Controllers
                 return NotFound();
             }
 
-            var pc = await _context.Pcs.Include(p=>p.HardWare).Include(s=>s.SoftWare)
+            var pc = await _context.Pcs
+                .Include(p => p.EquipUser)
+                .Include(p => p.SoftWare)
+                .Include(p => p.Manufacture)
+                .Include(p => p.HardWare)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (pc == null)
             {
-                return Content("NotFound");
+                return NotFound();
             }
 
             return View(pc);
         }
 
         // GET: Pcs/Create
-        [Authorize(Roles ="admin")]
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
+            ViewData["EquipUserId"] = new SelectList(_context.EquipUsers, "Id", "FullName");
+            ViewData["SoftWareId"] = new SelectList(_context.SoftWares, "Id", "Name");
+            ViewData["HardWareId"] = new SelectList(_context.HardWares, "Id", "HardType");
+            ViewData["Manufacture"] = new SelectList(_context.Manufactures, "Id", "Name");
             return View();
         }
 
@@ -58,31 +91,43 @@ namespace PcRepaire.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name,HardWareId,SoftWareId")] Pc pc)
+        public async Task<IActionResult> Create([Bind("HardWareId,Id,Model,SerialNumber,SoftWareId,EquipUserId,ManufactureId")] Pc pc)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(pc);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(pc);
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation("Created Pc " + pc.Model + " " + pc.SerialNumber);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException ex)
+                {
+                    ModelState.AddModelError("", "Unable to save changes, Try again");
+                }
             }
+            ViewData["EquipUserId"] = new SelectList(_context.EquipUsers, "Id", "Discriminator", pc.EquipUserId);
+            ViewData["SoftWareId"] = new SelectList(_context.SoftWares, "Id", "Id", pc.SoftWareId);
+            ViewData["HardWareId"] = new SelectList(_context.HardWares, "Id", "Id", pc.HardWareId);
             return View(pc);
         }
 
         // GET: Pcs/Edit/5
-        [Authorize(Roles ="admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var pc = await _context.Pcs.FindAsync(id);
             if (pc == null)
-            {
                 return NotFound();
-            }
+
+            ViewData["EquipUserId"] = new SelectList(_context.EquipUsers, "Id", "FullName", pc.EquipUserId);
+            ViewData["SoftWareId"] = new SelectList(_context.SoftWares, "Id", "Name", pc.SoftWareId);
+            ViewData["HardWareId"] = new SelectList(_context.HardWares, "Id", "HardType", pc.HardWareId);
+            ViewData["Manufature"] = new SelectList(_context.Manufactures, "Id", "Name", pc.ManufactureId);
             return View(pc);
         }
 
@@ -91,12 +136,13 @@ namespace PcRepaire.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles ="admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,HardWareId,SoftWareId")] Pc pc)
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> Edit(int id, [Bind("HardWareId,Id,Model,SerialNumber,SoftWareId,EquipUserId,ManufactureId")] Pc pc)
         {
             if (id != pc.Id)
             {
-                return NotFound();
+                ModelState.AddModelError("", "Unable to save changes, Try again");
+                return View(pc);
             }
 
             if (ModelState.IsValid)
@@ -110,63 +156,70 @@ namespace PcRepaire.Controllers
                 {
                     if (!PcExists(pc.Id))
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        ModelState.AddModelError("", "NotFound");
+                        return View(pc);
                     }
                 }
+                catch (DbUpdateException ex)
+                {
+                    _logger.LogError("DbUpdateException on created Pc: " + ex.Message);
+                    ModelState.AddModelError("", "Unable to save changes, Try again");
+                }
+
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["EquipUserId"] = new SelectList(_context.EquipUsers, "Id", "Discriminator", pc.EquipUserId);
+            ViewData["SoftWareId"] = new SelectList(_context.SoftWares, "Id", "Id", pc.SoftWareId);
+            ViewData["HardWareId"] = new SelectList(_context.HardWares, "Id", "Id", pc.HardWareId);
+            ViewData["Manufature"] = new SelectList(_context.Manufactures, "Id", "Name", pc.ManufactureId);
             return View(pc);
         }
 
         // GET: Pcs/Delete/5
-        [Authorize(Roles ="admin")]
-        public async Task<IActionResult> Delete(int? id, bool? error = false)
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                _logger.LogError("id = null, NotFound");
+                ModelState.AddModelError("", "NotFound");
+                return View();
             }
 
-            var pc = await _context.Pcs.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
-
+            var pc = await _context.Pcs
+                .Include(p => p.EquipUser)
+                .Include(p=> p.Manufacture)
+                .Include(p => p.SoftWare)
+                .Include(p => p.HardWare)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (pc == null)
             {
-                return NotFound();
+                ModelState.AddModelError("", "NotFound");
+                return View();
             }
-            
-            if (error == true)
-            {
-                ViewData["Error"] = "Delite filed, please try a latter";
-            }
-            
+
             return View(pc);
         }
 
         // POST: Pcs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles ="admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var pc = await _context.Pcs.FindAsync(id);
-            if (pc == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
             try
             {
                 _context.Pcs.Remove(pc);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Deleted Pc " + pc.Model + " " + pc.SerialNumber);
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException ex)
             {
-                return RedirectToAction(nameof(Delete), new { id = id, error = true });
+                _logger.LogError("Exception on delete Pc: " + ex.Message);
+                ModelState.AddModelError("", "Error on Delet Pc");
+                return View(pc);
             }
         }
 

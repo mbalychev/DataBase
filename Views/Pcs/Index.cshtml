@@ -1,47 +1,60 @@
 ﻿@model IEnumerable<PcRepaire.Models.Pc>
 
 @{
-    ViewData["Title"] = "Pcs";
+    ViewData["Title"] = "Index";
 }
 
-    <h1>Personal computers list</h1>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table text-center">
+<form asp-action="Index" style="max-width: 300px; margin:  40px 10px 40px auto">
+    <div class="input-group">
+        <input class="form-control" placeholder="serial number" name="search"></input>
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-dark">Search</button>
+        </div>
+    </div>
+</form>
+<table class="table text-center" style="margin: 0 auto; width: 80%;">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                <a asp-action="Index" asp-route-sort="@ViewData["Sort"]">
+                    @Html.DisplayNameFor(model => model.Manufacture.Name)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.HardWareId)
+                @Html.DisplayNameFor(model => model.Model)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SoftWareId)
+                @Html.DisplayNameFor(model => model.SerialNumber)
             </th>
+           
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HardWare.HardType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SoftWare.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Manufacture.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SerialNumber)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> | 
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

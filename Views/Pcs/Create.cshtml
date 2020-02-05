@@ -4,9 +4,8 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+    <h1>Personal computer data create</h1>
 
-<h4>Pc</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -18,19 +17,31 @@
                 <span asp-validation-for="Id" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Model" class="control-label"></label>
+                <input asp-for="Model" class="form-control" />
+                <span asp-validation-for="Model" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SerialNumber" class="control-label"></label>
+                <input asp-for="SerialNumber" class="form-control" />
+                <span asp-validation-for="SerialNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="HardWareId" class="control-label"></label>
-                <input asp-for="HardWareId" class="form-control" />
-                <span asp-validation-for="HardWareId" class="text-danger"></span>
+                <select asp-for="HardWareId" class="form-control" asp-items="ViewBag.HardWareId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="SoftWareId" class="control-label"></label>
-                <input asp-for="SoftWareId" class="form-control" />
-                <span asp-validation-for="SoftWareId" class="text-danger"></span>
+                <select asp-for="SoftWareId" class="form-control" asp-items="ViewBag.SoftWareId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="EquipUserId" class="control-label"></label>
+                <select asp-for="EquipUserId" class="form-control" asp-items="ViewBag.EquipUserId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ManufactureId" class="control-label"></label>
+                <select asp-for="ManufactureId" class="form-control" asp-items="ViewBag.Manufacture"></select>
+                <span asp-validation-for="ManufactureId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
