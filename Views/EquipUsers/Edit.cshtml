@@ -22,6 +22,12 @@
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
+            <a asp-action="Index" asp-controller="Pcs">
+                Add pc to use
+            </a>
+            <a asp-action="Index" asp-controller="Tablets"  style="margin-left: 10px;">
+                Add tablet to use
+            </a>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

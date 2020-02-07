@@ -59,7 +59,7 @@ namespace PcRepaire.Controllers
                 return RedirectToAction("Index", new { message = "not found" });
             }
 
-            var equipUser = await _context.EquipUsers
+            var equipUser = await _context.EquipUsers.Include(i => i.Tablets).Include(i=>i.Pcs)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (equipUser == null)
             {

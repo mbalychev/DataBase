@@ -16,9 +16,9 @@ namespace PcRepaire.Models
         public string LastName { get; set; }
         [DisplayName("First name")]
         public string FirstName { get; set; }
-
         [DisplayName("Full name")]
         public string FullName => FirstName + " " + LastName;
+
        
     }
 }

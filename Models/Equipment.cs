@@ -12,7 +12,6 @@ namespace PcRepaire.Models
 
     public class Equipment
     {
-        private bool freeForUse;
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
@@ -20,24 +19,11 @@ namespace PcRepaire.Models
         [DisplayName("Serial number")]
         public string SerialNumber { get; set; }
         public int SoftWareId { get; set; }
-        public int? EquipUserId { get; set; }
         public SoftWare SoftWare { get; set; }
         public int ManufactureId { get; set; }
         public Manufacture Manufacture { get; set; }
-        [DisplayName("User")]
-        public EquipUser EquipUser { get; set; }
-        [DisplayName("Used/Free")]
-        public string Used
-        {
-            get
-            {
-                if (this.EquipUser == null)
-                    return "free";
-                else
-                    return "used";
-            }
-
-        }
+        [DisplayName("Equipment info")]
+        public string Info => "Model: " + Model + " Sn: " + SerialNumber;
 
     }
 }

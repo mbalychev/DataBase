@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace PcRepaire.Models
 {
-    public class Tablet : Equipment
+    public class Tablet : EqupmentUsing
     {
-        public string Type => "Mobile";
     }
 }

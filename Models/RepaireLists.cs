@@ -18,6 +18,7 @@ namespace PcRepaire.Models
         public bool SoftWare { get; set; }
         [DisplayName("Was fix Hardware")]
         public bool HardWare { get; set; }
+        
         [DisplayName("Repaire man")]
         public RepaireMan RepaireMan { get; set; }
         public Equipment Equipment { get; set; }

@@ -33,7 +33,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.SerialNumber)
             </th>
-
+            <th>
+                @Html.DisplayNameFor(model => model.Used)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -41,22 +43,25 @@
         @foreach (var item in Model)
         {
 
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Manufacture.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Model)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SerialNumber)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Manufacture.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SerialNumber)
+            </td>
+            <th>
+                @Html.DisplayFor(model => item.Used)
+            </th>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
