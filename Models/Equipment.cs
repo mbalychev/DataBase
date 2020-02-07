@@ -7,13 +7,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PcRepaire.Models
 {
-    
+
 
 
     public class Equipment
     {
+        private bool freeForUse;
+
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id  {get;set;}
+        public int Id { get; set; }
         public string Model { get; set; }
         [DisplayName("Serial number")]
         public string SerialNumber { get; set; }
@@ -24,5 +26,19 @@ namespace PcRepaire.Models
         public Manufacture Manufacture { get; set; }
         [DisplayName("User")]
         public EquipUser EquipUser { get; set; }
+        [DisplayName("Used/Free")]
+        public string Used
+        {
+            get
+            {
+                if (this.EquipUser == null)
+                    return "free";
+                else
+                    return "used";
+            }
+
+        }
+
     }
 }
+

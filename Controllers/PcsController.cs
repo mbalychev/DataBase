@@ -25,17 +25,16 @@ namespace PcRepaire.Controllers
         }
 
         // GET: Pcs
-        public async Task<IActionResult> Index(string sort, string search)
+        public async Task<IActionResult> Index(string sort, string search, string message)
         {
             ViewData["Sort"] = string.IsNullOrEmpty(sort) ? "ManufactureDesc" : "";
+            ViewData["Message"] = message;
             var pcs = _context.Pcs.Include(p => p.EquipUser).Include(p => p.Manufacture).Include(p => p.SoftWare).Include(p => p.HardWare).Select(s => s);
-            
+
             if (!string.IsNullOrEmpty(search))
-            {
                 pcs = pcs.Where(n => n.SerialNumber.Contains(search));
-            }
-            
-                switch (sort)
+
+            switch (sort)
             {
                 case "ManufactureDesc":
                     {
@@ -48,16 +47,16 @@ namespace PcRepaire.Controllers
                         break;
                     }
             }
-            //pcs.Include(p => p.EquipUser).Include(p => p.Manufacture).Include(p => p.SoftWare).Include(p => p.HardWare);
             return View(await pcs.ToListAsync());
         }
 
         // GET: Pcs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            if (id == null || id == 0)
             {
-                return NotFound();
+                ModelState.AddModelError("", "pc not found");
+                return RedirectToAction(nameof(Index));
             }
 
             var pc = await _context.Pcs
@@ -66,9 +65,11 @@ namespace PcRepaire.Controllers
                 .Include(p => p.Manufacture)
                 .Include(p => p.HardWare)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (pc == null)
             {
-                return NotFound();
+                ModelState.AddModelError("", "pc not found");
+                return RedirectToAction(nameof(Index));
             }
 
             return View(pc);
@@ -105,24 +106,43 @@ namespace PcRepaire.Controllers
                 catch (DbUpdateException ex)
                 {
                     ModelState.AddModelError("", "Unable to save changes, Try again");
+                    return View(pc);
                 }
             }
-            ViewData["EquipUserId"] = new SelectList(_context.EquipUsers, "Id", "Discriminator", pc.EquipUserId);
-            ViewData["SoftWareId"] = new SelectList(_context.SoftWares, "Id", "Id", pc.SoftWareId);
-            ViewData["HardWareId"] = new SelectList(_context.HardWares, "Id", "Id", pc.HardWareId);
-            return View(pc);
+            else
+            {
+                ViewData["EquipUserId"] = new SelectList(_context.EquipUsers, "Id", "Discriminator", pc.EquipUserId);
+                ViewData["SoftWareId"] = new SelectList(_context.SoftWares, "Id", "Id", pc.SoftWareId);
+                ViewData["HardWareId"] = new SelectList(_context.HardWares, "Id", "Id", pc.HardWareId);
+                ModelState.AddModelError("", "Unable to save changes, model pc error");
+                return View(pc);
+            }
         }
 
         // GET: Pcs/Edit/5
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
+
+
+
+            return RedirectToAction("Index", new { message = "pc not found" });
+
+
+
+
             if (id == null)
-                return NotFound();
+            {
+                ModelState.AddModelError("", "pc not found");
+                return RedirectToAction(nameof(Index));
+            }
 
             var pc = await _context.Pcs.FindAsync(id);
             if (pc == null)
-                return NotFound();
+            {
+                ModelState.AddModelError("", "pc not found");
+                return RedirectToAction(nameof(Index));
+            }
 
             ViewData["EquipUserId"] = new SelectList(_context.EquipUsers, "Id", "FullName", pc.EquipUserId);
             ViewData["SoftWareId"] = new SelectList(_context.SoftWares, "Id", "Name", pc.SoftWareId);
@@ -141,8 +161,8 @@ namespace PcRepaire.Controllers
         {
             if (id != pc.Id)
             {
-                ModelState.AddModelError("", "Unable to save changes, Try again");
-                return View(pc);
+                ModelState.AddModelError("", "pc not found");
+                return RedirectToAction(nameof(Index));
             }
 
             if (ModelState.IsValid)
@@ -151,12 +171,14 @@ namespace PcRepaire.Controllers
                 {
                     _context.Update(pc);
                     await _context.SaveChangesAsync();
+                    return View(pc);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
                     if (!PcExists(pc.Id))
                     {
-                        ModelState.AddModelError("", "NotFound");
+                        ModelState.AddModelError("", "Unable to save changes, Try again");
+                        _logger.LogError("DbUpdateException on created Pc: " + ex.Message);
                         return View(pc);
                     }
                 }
@@ -164,6 +186,7 @@ namespace PcRepaire.Controllers
                 {
                     _logger.LogError("DbUpdateException on created Pc: " + ex.Message);
                     ModelState.AddModelError("", "Unable to save changes, Try again");
+                    return View(pc);
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -181,21 +204,20 @@ namespace PcRepaire.Controllers
         {
             if (id == null)
             {
-                _logger.LogError("id = null, NotFound");
-                ModelState.AddModelError("", "NotFound");
-                return View();
+                ModelState.AddModelError("", "pc not found");
+                return RedirectToAction(nameof(Index));
             }
 
             var pc = await _context.Pcs
                 .Include(p => p.EquipUser)
-                .Include(p=> p.Manufacture)
+                .Include(p => p.Manufacture)
                 .Include(p => p.SoftWare)
                 .Include(p => p.HardWare)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (pc == null)
             {
-                ModelState.AddModelError("", "NotFound");
-                return View();
+                ModelState.AddModelError("", "pc not found");
+                return RedirectToAction(nameof(Index));
             }
 
             return View(pc);
@@ -218,7 +240,7 @@ namespace PcRepaire.Controllers
             catch (DbUpdateException ex)
             {
                 _logger.LogError("Exception on delete Pc: " + ex.Message);
-                ModelState.AddModelError("", "Error on Delet Pc");
+                ModelState.AddModelError("", "Error on Delete Pc");
                 return View(pc);
             }
         }
