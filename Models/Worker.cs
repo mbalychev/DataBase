@@ -9,12 +9,18 @@ namespace PcRepaire.Models
 {
     public class Worker
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [HiddenInput(DisplayValue = false)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None), HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
         
+        public string FullName
+        {
+            get
+            {
+                return LastName + " " + FullName;
+            }
+        }
         public ICollection<RepairList> RepairList { get; set; }
        
     }

@@ -9,7 +9,7 @@
     <div class="col-8">
         <h1>Repaire list of personal computers</h1>
     </div>
-    <div class="col-4 offset-sm-8" style="margin-bottom: 30px;">
+    <div style="margin-bottom: 40px; margin-top: 40px;">
         <form class="form-inline" asp-action="Index" method="get">
             <label style="margin-right: 30px;">Find by name</label>
             <input class="form-control mr-sm-2" type="search" name="search" value="@ViewData["CurrentFilter"]" placeholder="Search" aria-label="Search">
@@ -35,10 +35,10 @@
                 </a>
             </th>
             <th>
-                SoftWareRapaired
+                @Html.DisplayNameFor(model => model[0].SoftWareRapaired)
             </th>
             <th>
-                HardWareRapaired
+                @Html.DisplayNameFor(model => model[0].HardWareRapaired)
             </th>
             <th>
 
@@ -55,7 +55,8 @@
                     </a>
                 </td>
                 <td>
-                    <label>@item.Date.ToShortDateString()</label>
+                    @Html.DisplayFor(modelItem => item.Date)
+                    @*<label>@item.Date.ToShortDateString()</label>*@
                 </td>
                 <td>
                     <a asp-controller="Workers" asp-action="Details" asp-route-id="@item.Worker.Id">

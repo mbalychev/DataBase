@@ -22,6 +22,5 @@ namespace PcRepaire.Data
         public DbSet<SoftWare> SoftWares { get; set; }
         public DbSet<RepairList> RepairLists { get; set; }
         public DbSet<Pc> Pcs { get; set; }
-        public DbSet<PcRepaire.Models.ViewModels.Statistic> Statistic { get; set; }
     }
 }

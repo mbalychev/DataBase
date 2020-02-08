@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
 
-namespace PcRepaire.Data.Migrations
+namespace PcRepaire.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class Initialising : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,6 +45,42 @@ namespace PcRepaire.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HardWares",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    HardType = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HardWares", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SoftWares",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SoftWares", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Statistic",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Statistic", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,8 +129,8 @@ namespace PcRepaire.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -138,8 +174,8 @@ namespace PcRepaire.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -149,6 +185,117 @@ namespace PcRepaire.Data.Migrations
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pcs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    HardWareId = table.Column<int>(nullable: false),
+                    SoftWareId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pcs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pcs_HardWares_HardWareId",
+                        column: x => x.HardWareId,
+                        principalTable: "HardWares",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Pcs_SoftWares_SoftWareId",
+                        column: x => x.SoftWareId,
+                        principalTable: "SoftWares",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StatRepaires",
+                columns: table => new
+                {
+                    Date = table.Column<DateTime>(nullable: false),
+                    Count = table.Column<int>(nullable: false),
+                    StatisticId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StatRepaires", x => x.Date);
+                    table.ForeignKey(
+                        name: "FK_StatRepaires_Statistic_StatisticId",
+                        column: x => x.StatisticId,
+                        principalTable: "Statistic",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Workers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    LastName = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    Discriminator = table.Column<string>(nullable: false),
+                    CountRepaires = table.Column<int>(nullable: true),
+                    CountSoft = table.Column<int>(nullable: true),
+                    CountHard = table.Column<int>(nullable: true),
+                    StatisticId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Workers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Workers_Statistic_StatisticId",
+                        column: x => x.StatisticId,
+                        principalTable: "Statistic",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RepairLists",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    PcId = table.Column<int>(nullable: false),
+                    WorkerId = table.Column<int>(nullable: false),
+                    SoftWareRapaired = table.Column<bool>(nullable: false),
+                    HardWareRapaired = table.Column<bool>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    SoftWareId = table.Column<int>(nullable: true),
+                    HardWareId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RepairLists", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RepairLists_HardWares_HardWareId",
+                        column: x => x.HardWareId,
+                        principalTable: "HardWares",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RepairLists_Pcs_PcId",
+                        column: x => x.PcId,
+                        principalTable: "Pcs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RepairLists_SoftWares_SoftWareId",
+                        column: x => x.SoftWareId,
+                        principalTable: "SoftWares",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RepairLists_Workers_WorkerId",
+                        column: x => x.WorkerId,
+                        principalTable: "Workers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -191,6 +338,46 @@ namespace PcRepaire.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pcs_HardWareId",
+                table: "Pcs",
+                column: "HardWareId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pcs_SoftWareId",
+                table: "Pcs",
+                column: "SoftWareId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RepairLists_HardWareId",
+                table: "RepairLists",
+                column: "HardWareId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RepairLists_PcId",
+                table: "RepairLists",
+                column: "PcId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RepairLists_SoftWareId",
+                table: "RepairLists",
+                column: "SoftWareId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RepairLists_WorkerId",
+                table: "RepairLists",
+                column: "WorkerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StatRepaires_StatisticId",
+                table: "StatRepaires",
+                column: "StatisticId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Workers_StatisticId",
+                table: "Workers",
+                column: "StatisticId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -211,10 +398,31 @@ namespace PcRepaire.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "RepairLists");
+
+            migrationBuilder.DropTable(
+                name: "StatRepaires");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Pcs");
+
+            migrationBuilder.DropTable(
+                name: "Workers");
+
+            migrationBuilder.DropTable(
+                name: "HardWares");
+
+            migrationBuilder.DropTable(
+                name: "SoftWares");
+
+            migrationBuilder.DropTable(
+                name: "Statistic");
         }
     }
 }
