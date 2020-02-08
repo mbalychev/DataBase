@@ -7,16 +7,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PcRepaire</title>
-
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link href="~/css/site.css" rel="stylesheet" />
     </environment>
     <environment exclude="Development">
+        <link href="~/css/site.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -40,17 +41,16 @@
                             <li class="nav-item">
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="RepaireList" asp-action="Index">RepaireList</a>
+                                <a class="nav-link text-dark" asp-controller="RepaireLists" asp-action="Index">RepaireList</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Office
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="nav-link text-dark dropdown-item" asp-controller="Workers" asp-action="Index">Workers</a>
+                                    <a class="nav-link text-dark dropdown-item" asp-controller="EquipUsers" asp-action="Index">EquipUsers</a>
                                     <a class="nav-link text-dark dropdown-item" asp-controller="Pcs" asp-action="Index">Pcs</a>
-                                    <a class="nav-link text-dark dropdown-item" asp-controller="HardWares" asp-action="Index">HardWares</a>
-                                    <a class="nav-link text-dark dropdown-item" asp-controller="SoftWares" asp-action="Index">SoftWares</a>
+                                    <a class="nav-link text-dark dropdown-item" asp-controller="Tablets" asp-action="Index">Tablets</a>
                                 </div>
                             </li>
                         }

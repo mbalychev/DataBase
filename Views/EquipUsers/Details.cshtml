@@ -1,0 +1,77 @@
+﻿@model PcRepaire.Models.EquipUser
+
+@{
+    ViewData["Title"] = "Employee";
+}
+
+<h1>Employee details</h1>
+
+<div>
+
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            Use personal computers
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                @if (Model.Pcs != null)
+                {
+                    @foreach (Equipment equipment in Model.Pcs)
+                    {
+                        <li>
+                            <a asp-controller="Pcs" asp-action="Details" asp-route-id="@equipment.Id">
+                                @equipment.Info
+                            </a>
+                        </li>
+                    }
+                }
+                else
+                {
+                    @Html.Label("none");
+                }
+
+            </ul>
+        </dd>
+        <dt class="col-sm-2">
+            Use tablets
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                @if (Model.Tablets.Count != 0)
+                {
+                    @foreach (Equipment equipment in Model.Tablets)
+                    {
+                        <li>
+                            <a asp-controller="Tablets" asp-action="Details" asp-route-id="@equipment.Id">
+                                @equipment.Info
+                            </a>
+                        </li>
+                    }
+
+                }
+                else
+                {
+                    @Html.Label("none");
+                }
+
+            </ul>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

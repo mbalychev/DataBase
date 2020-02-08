@@ -7,7 +7,7 @@ namespace PcRepaire.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
-        [DisplayName("Name software")]
+        [DisplayName("Name Software")]
         public string Name { get; set; }
     }
 

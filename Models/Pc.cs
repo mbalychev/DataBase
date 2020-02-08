@@ -3,16 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PcRepaire.Models
 {
-    public class Pc
+    public class Pc :EqupmentUsing
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
-        [DisplayName("Computer name")]
-        public string Name { get; set; }
         public int HardWareId { get; set; }
-        public int SoftWareId { get; set; }
-
+        [DisplayName("Hard ware")]
         public HardWare HardWare { get; set; }
-        public SoftWare SoftWare { get; set; }
     }
 }

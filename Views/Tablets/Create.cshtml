@@ -1,21 +1,22 @@
-﻿@model PcRepaire.Models.Pc
+﻿@model PcRepaire.Models.Tablet
 
 @{
-    ViewData["Title"] = "Pc";
+    ViewData["Title"] = "Tablet";
 }
 
-    <h1>Personal computer data create</h1>
+<h1>Tablet create</h1>
+
 
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="Id" class="control-label"></label>
                 <input asp-for="Id" class="form-control" />
                 <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="Model" class="control-label"></label>
                 <input asp-for="Model" class="form-control" />
@@ -27,10 +28,6 @@
                 <span asp-validation-for="SerialNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="HardWareId" class="control-label"></label>
-                <select asp-for="HardWareId" class="form-control" asp-items="ViewBag.HardWareId"></select>
-            </div>
-            <div class="form-group">
                 <label asp-for="SoftWareId" class="control-label"></label>
                 <select asp-for="SoftWareId" class="form-control" asp-items="ViewBag.SoftWareId"></select>
             </div>
@@ -40,8 +37,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="ManufactureId" class="control-label"></label>
-                <select asp-for="ManufactureId" class="form-control" asp-items="ViewBag.Manufacture"></select>
-                <span asp-validation-for="ManufactureId" class="text-danger"></span>
+                <select asp-for="ManufactureId" class="form-control" asp-items="ViewBag.ManufactureId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

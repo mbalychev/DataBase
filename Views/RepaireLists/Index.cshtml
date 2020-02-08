@@ -1,0 +1,82 @@
+﻿@model IEnumerable<PcRepaire.Models.RepaireLists>
+
+@{
+    ViewData["Title"] = "Repaires";
+}
+
+<h1>List of repaires</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<form asp-action="Index" style="max-width: 600px; margin:  40px 10px 10px auto">
+    <div class="input-group">
+        <input class="form-control" placeholder="serial number" value="@ViewData["Search"]" name="search" style="max-width: 250px;"></input>
+        @*<input type="hidden" name="filterRepairMan" value="@ViewData["FilterRepairMan"]" />*@
+    </div>
+    @*<input type="hidden" name="search" value="@ViewData["Search"]" />*@
+
+    <div class="input-group">
+        <select name="filterRepairMan" class="custom-select" style="max-width: 250px;">
+            <option value="0" selected>
+                All
+            </option>
+            @foreach (RepaireMan man in ViewBag.RepaireMans)
+            {
+                <!option value="@man.Id" @((Convert.ToInt32(ViewData["FilterRepairMan"]) == man.Id) ? "selected" : "")>
+                    @man.FullName
+                </!option>
+            }
+        </select>
+    </div>
+
+    <div class="input-group-append">
+        <button type="submit" class="btn btn-dark">Search</button>
+    </div>
+
+</form>
+
+<label class="alert-danger error-div">@ViewData["Message"]</label>
+<table class="table text-center" style="margin: 0 auto; width: 80%;">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Equipment.Model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Equipment.SerialNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateRepaire)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RepaireMan)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Equipment.Model)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Equipment.SerialNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateRepaire)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RepaireMan.FullName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
