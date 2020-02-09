@@ -26,12 +26,14 @@ namespace PcRepaire.Data
             _logger = services.GetRequiredService<ILogger<Program>>();
             _context.Database.EnsureCreated();
 
-            if (!_context.RepaireLists.Any())
+            if (!_context.RepaireMen.Any())
             {
                 await CreateRoles();
                 await CreateUsers();
                 await CreateData();
             }
+            _logger.LogInformation("DataBase... ok");
+
         }
 
         private static async Task CreateRoles()
@@ -82,40 +84,38 @@ namespace PcRepaire.Data
 
         private static async Task CreateData()
         {
-            if (!_context.RepaireLists.Any())
+            EquipUser[] equipUsers = Initializer.EquipUsersList.CreateEquipUsersList();
+            RepaireMan[] repaireMens = Initializer.RepaireManList.CreateRepaireMen();
+            Pc[] pcs = Initializer.PcList.CreatePcLists();
+            Tablet[] tablets = Initializer.TabletsList.CreateTabletsList();
+            SoftWare[] softWares = Initializer.SoftWareList.CreateSoftWares();
+            HardWare[] hardWares = Initializer.HardWareList.CreateHardWares();
+            RepairePC[] repairPc = Initializer.RepairPcsList.CreateRepairPcs();
+            RepaireTablet[] repaireTablets = Initializer.RepaireTabletsList.CreateRepaireTablets();
+            Manufacture[] manufactures = Initializer.ManufactureList.CreateManufactures();
+            try
             {
-                EquipUser[] equipUsers = Initializer.EquipUsersList.CreateEquipUsersList();
-                RepaireMan[] repaireMens = Initializer.RepaireManList.CreateRepaireMen();
-                Pc[] pcs = Initializer.PcList.CreatePcLists();
-                Tablet[] tablets = Initializer.TabletsList.CreateTabletsList();
-                SoftWare[] softWares = Initializer.SoftWareList.CreateSoftWares();
-                HardWare[] hardWares = Initializer.HardWareList.CreateHardWares();
-                RepaireLists[] repairList = Initializer.RepairList.CreateRepairList();
-                Manufacture[] manufactures = Initializer.ManufactureList.CreateManufactures();
-                try
-                {
 
-                    foreach (Tablet tablet in tablets) { _context.Tablets.Add(tablet); }
-                    foreach (Pc pc in pcs) { _context.Pcs.Add(pc); }
-                    foreach (SoftWare soft in softWares) { _context.SoftWares.Add(soft); }
-                    foreach (HardWare hard in hardWares) { _context.HardWares.Add(hard); }
-                    foreach (EquipUser equipUser in equipUsers) { _context.EquipUsers.Add(equipUser); }
-                    foreach (RepaireMan repaireMan in repaireMens) { _context.RepaireMen.Add(repaireMan); }
-                    foreach (RepaireLists repair in repairList) { _context.RepaireLists.Add(repair); }
-                    foreach (Manufacture manufacture in manufactures) { _context.Manufactures.Add(manufacture); }
+                foreach (Tablet tablet in tablets) { _context.Tablets.Add(tablet); }
+                foreach (Pc pc in pcs) { _context.Pcs.Add(pc); }
+                foreach (SoftWare soft in softWares) { _context.SoftWares.Add(soft); }
+                foreach (HardWare hard in hardWares) { _context.HardWares.Add(hard); }
+                foreach (EquipUser equipUser in equipUsers) { _context.EquipUsers.Add(equipUser); }
+                foreach (RepaireMan repaireMan in repaireMens) { _context.RepaireMen.Add(repaireMan); }
+                foreach (RepairePC repaire in repairPc) { _context.RepairePCs.Add(repaire); }
+                foreach (RepaireTablet repaire in repaireTablets) { _context.RepaireTablets.Add(repaire); }
+                foreach (Manufacture manufacture in manufactures) { _context.Manufactures.Add(manufacture); }
 
-                    await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 _logger.LogInformation("DataBase... created");
             }
-                catch (Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogInformation(ex.Message);
             }
-        }
-            else
-                _logger.LogInformation("DataBase... ok");
+
         }
 
 
-}
+    }
 }

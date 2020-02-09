@@ -21,7 +21,8 @@ namespace PcRepaire.Data
         public DbSet<Equipment> Equipments { get; set; }
         public DbSet<HardWare> HardWares { get; set; }
         public DbSet<SoftWare> SoftWares { get; set; }
-        public DbSet<RepaireLists> RepaireLists { get; set; }
+        public DbSet<RepairePC> RepairePCs { get; set; }
+        public DbSet<RepaireTablet> RepaireTablets { get; set; }
         public DbSet<Pc> Pcs { get; set; }
         public DbSet<Tablet> Tablets { get; set; }
         public DbSet<RepaireMan> RepaireMen { get; set; }

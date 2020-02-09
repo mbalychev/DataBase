@@ -8,8 +8,6 @@ namespace PcRepaire.Models
 {
     public class EqupmentUsing :Equipment
     {
-        private bool freeForUse;
-
         public int? EquipUserId { get; set; }
         [DisplayName("User")]
         public EquipUser EquipUser { get; set; }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PcRepaire.Models
 {
-    public class Pc :EqupmentUsing
+    public class Pc : EqupmentUsing
     {
         public int HardWareId { get; set; }
         [DisplayName("Hard ware")]
