@@ -12,6 +12,17 @@ namespace PcRepaire.Models.ViewModels
         [DisplayName("Type")]
         public string Type { get; set; }
         public string Model { get; set; }
+        public string WorkerName { get; set; }
+
+
+        public ViewRepaire(int id, string type, string model, string serialNumber, string workerName) 
+        {
+            Id = id;
+            Type = type;
+            Model = model;
+            SerialNumber = serialNumber;
+            WorkerName = workerName;
+        }
 
         public ViewRepaire(RepairePC pc)
         {

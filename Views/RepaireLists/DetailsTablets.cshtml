@@ -1,0 +1,42 @@
+﻿@model PcRepaire.Models.RepaireTablet
+
+<div>
+    <h4>RepaireTablet</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Tablet.Model)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Tablet.Model)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Tablet.SerialNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Tablet.SerialNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DateRepaire)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DateRepaire)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SoftWare)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SoftWare)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RepaireMan)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RepaireMan.FullName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Details" asp-controller="Tablets" asp-route-id="@Model.Id">View Tablet</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

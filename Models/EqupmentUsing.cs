@@ -12,16 +12,15 @@ namespace PcRepaire.Models
         [DisplayName("User")]
         public EquipUser EquipUser { get; set; }
         [DisplayName("Used/Free")]
-        public string Used
+        public bool Used
         {
             get
             {
                 if (this.EquipUser == null)
-                    return "free";
+                    return false;
                 else
-                    return "used";
+                    return true;
             }
-
         }
 
     }

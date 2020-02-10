@@ -1,4 +1,4 @@
-﻿@model PcRepaire.Models.RepaireLists
+﻿@model PcRepaire.Models.RepaireTablet
 
 @{
     ViewData["Title"] = "Create";
@@ -10,34 +10,24 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="CreateTablet">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                @*<label asp-for="EquipmentId " class="control-label"></label>
-                <select asp-for="EquipmentId " class ="form-control" asp-items="ViewBag.EquipmentId "></select>*@
+                <label asp-for="TabletId" class="control-label"></label>
+                <select asp-for="TabletId" class ="form-control" asp-items="ViewBag.Equipment "></select>
             </div>
             <div class="form-group">
                 <label asp-for="RepaireManId" class="control-label"></label>
-                <select asp-for="RepaireManId" class ="form-control" asp-items="ViewBag.RepaireManId"></select>
+                <select asp-for="RepaireManId"  class ="form-control" asp-items="ViewBag.RepaireMan"></select>
             </div>
             <div class="form-group">
                 <label asp-for="DateRepaire" class="control-label"></label>
-                <input asp-for="DateRepaire" class="form-control" />
+                <input asp-for="DateRepaire" type="date" value="@DateTime.Today" class="form-control"/>
                 <span asp-validation-for="DateRepaire" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="SoftWare" /> @Html.DisplayNameFor(model => model.SoftWare)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    @*<input class="form-check-input" asp-for="HardWare" /> @Html.DisplayNameFor(model => model.HardWare)*@
                 </label>
             </div>
             <div class="form-group">

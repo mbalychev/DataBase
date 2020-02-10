@@ -123,28 +123,23 @@ namespace PcRepaire.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
-
-
-
-            return RedirectToAction("Index", new { message = "pc not found" });
-
-
-
-
             if (id == null)
             {
                 ModelState.AddModelError("", "pc not found");
                 return RedirectToAction(nameof(Index));
             }
 
-            var pc = await _context.Pcs.FindAsync(id);
+            var pc = await _context.Pcs.Include(s=>s.EquipUser).FirstOrDefaultAsync(s=>s.Id == id);
             if (pc == null)
             {
                 ModelState.AddModelError("", "pc not found");
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["EquipUserId"] = new SelectList(_context.EquipUsers, "Id", "FullName", pc.EquipUserId);
+            List<SelectListItem> selects = new SelectList(_context.EquipUsers, "Id", "FullName", pc.EquipUserId).ToList();
+            selects.Insert(0, (new SelectListItem { Text = "None", Value = "" }));
+            
+            ViewData["EquipUserId"] = selects;
             ViewData["SoftWareId"] = new SelectList(_context.SoftWares, "Id", "Name", pc.SoftWareId);
             ViewData["HardWareId"] = new SelectList(_context.HardWares, "Id", "HardType", pc.HardWareId);
             ViewData["Manufature"] = new SelectList(_context.Manufactures, "Id", "Name", pc.ManufactureId);
@@ -165,13 +160,21 @@ namespace PcRepaire.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            List<SelectListItem> selects = new SelectList(_context.EquipUsers, "Id", "FullName", pc.EquipUserId).ToList();
+            selects.Insert(0, (new SelectListItem { Text = "None", Value = "" }));
+
+            ViewData["EquipUserId"] = selects;
+            ViewData["SoftWareId"] = new SelectList(_context.SoftWares, "Id", "Name", pc.SoftWareId);
+            ViewData["HardWareId"] = new SelectList(_context.HardWares, "Id", "HardType", pc.HardWareId);
+            ViewData["Manufature"] = new SelectList(_context.Manufactures, "Id", "Name", pc.ManufactureId);
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     _context.Update(pc);
                     await _context.SaveChangesAsync();
-                    return View(pc);
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {

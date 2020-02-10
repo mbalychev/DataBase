@@ -17,7 +17,10 @@
         </div>
     </div>
 </form>
-<label class="alert-danger error-div">@ViewData["Message"]</label>
+@if (ViewData["Message"] != null)
+{
+    <label class="alert-danger error-div">@ViewData["Message"]</label>
+}
 <table class="table text-center" style="margin: 0 auto; width: 80%;">
     <thead>
         <tr>
@@ -29,31 +32,31 @@
             <th>
                 @Html.DisplayNameFor(model => model.SerialNumber)
             </th>
-           <th>
-               @Html.DisplayNameFor(model => model.Used)
-           </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Used)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SerialNumber)
-            </td>
-            <th>
-                @Html.DisplayFor(model => item.Used)
-            </th>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SerialNumber)
+                </td>
+                <th>
+                    @Html.DisplayFor(model => item.Used)
+                </th>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

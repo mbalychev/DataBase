@@ -21,16 +21,132 @@ namespace PcRepaire.Controllers
         }
 
         // GET: RepaireLists
-        public async Task<IActionResult> Index(string search, int filterRepairMan, string sort)
+        public async Task<IActionResult> Index(string search, int filterRepairMan, string sort, string message)
         {
-            ViewData["RepaireMans"] = await _context.RepaireMen.ToListAsync();
+            List<ViewRepaire> repaire = await ViewRepaireListAsync();
+            //search
+            if (!string.IsNullOrEmpty(search)) repaire = repaire.Where(r => r.SerialNumber.Contains(search)).ToList();
+            //filter
+            if (filterRepairMan != 0) repaire = repaire.Where(r => r.RepaireManId == filterRepairMan).ToList();
+            //sort
+            switch (sort)
+            {
+                case "dateDesc":
+                    {
+                        repaire = repaire.OrderByDescending(s => s.DateRepaire).ToList();
+                        break;
+                    }
+                default:
+                    {
+                        repaire = repaire.OrderBy(s => s.DateRepaire).ToList();
+                        break;
+                    }
+            }
+
+            ViewData["Sort"] = string.IsNullOrEmpty(sort) ? "dateDesc" : "";
+            ViewData["RepaireMans"] = FilterRepaireMans(repaire);
             ViewData["FilterRepairMan"] = filterRepairMan;
             ViewData["Search"] = search;
+            ViewData["Message"] = message;
 
-            //var repaireList  = _context.RepaireLists.Include(r => r.Equipment).Include(i => i.RepaireMan).Select(s => s).AsNoTracking();
-            //List<RepaireLists> repaire = await _context.RepaireLists.Include(r => r.Equipment).Include(i => i.RepaireMan).Include(i=>i.Tablet).Include(i=>i.Pc).ToListAsync();
+            return View(repaire);
+        }
+
+
+        // GET: RepaireLists/Details/5
+        public async Task<IActionResult> Details(int? id, string type)
+        {
+            if (id == null || string.IsNullOrEmpty(type))
+            {
+                return RedirectToAction(nameof(Index), new { message = "Not found" });
+            }
+
+            switch (type)
+            {
+                case "Pc":
+                    {
+                        RepairePC repairePC = await _context.RepairePCs.Include(i => i.Pc).Include(r => r.RepaireMan).Select(s => s).FirstOrDefaultAsync(r => r.Id == id);
+                        return View("DetailsPc", repairePC);
+                    }
+                case "Tablet":
+                    {
+                        RepaireTablet repaireTablet = await _context.RepaireTablets.Include(i => i.Tablet).Include(r => r.RepaireMan).Select(s => s).FirstOrDefaultAsync(r => r.Id == id);
+                        return View("DetailsTablets", repaireTablet);
+                    }
+                default:
+                    {
+                        return RedirectToAction(nameof(Index), new { message = "Not found" });
+                    }
+            }
+
+        }
+
+        // GET: RepaireLists/Create
+        public IActionResult CreatePc()
+        {
+            ViewData["Equipment"] = new SelectList(_context.Pcs, "Id", "Info");
+            ViewData["RepaireMan"] = new SelectList(_context.RepaireMen, "Id", "FullName");
+            return View();
+        }
+
+        // POST: RepaireLists/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreatePc([Bind("Id,EquipmentId,RepaireManId,DateRepaire,SoftWare,HardWare, PcId")] RepairePC repaire)
+        {
+            repaire.Id = await MaxIdRepaire();
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(repaire);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["Equipment"] = new SelectList(_context.Pcs, "Id", "Info");
+            ViewData["RepaireMan"] = new SelectList(_context.RepaireMen, "Id", "FullName");
+            return View("CreatePc");
+        }
+
+        // GET: RepaireLists/Create
+        public IActionResult CreateTablet()
+        {
+            ViewData["Equipment"] = new SelectList(_context.Tablets, "Id", "Info");
+            ViewData["RepaireMan"] = new SelectList(_context.RepaireMen, "Id", "FullName");
+            return View();
+        }
+
+        // POST: RepaireLists/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateTablet([Bind("Id,EquipmentId,RepaireManId,DateRepaire,SoftWare,TabletId")] RepaireTablet repaire)
+        {
+            repaire.Id = await MaxIdRepaire();
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(repaire);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["Equipment"] = new SelectList(_context.Tablets, "Id", "Info");
+            ViewData["RepaireMan"] = new SelectList(_context.RepaireMen, "Id", "FullName");
+            return View();
+        }
+
+        private bool RepaireListsExists(int id)
+        {
+            return true;
+            //return _context.RepaireLists.Any(e => e.Id == id);
+        }
+
+        private async Task<List<ViewRepaire>> ViewRepaireListAsync()
+        {
             List<ViewRepaire> repaire = new List<ViewRepaire>();
-            List<RepairePC> pcs = await _context.RepairePCs.Include(i => i.Pc).Include(i=>i.RepaireMan).ToListAsync();
+            List<RepairePC> pcs = await _context.RepairePCs.Include(i => i.Pc).Include(i => i.RepaireMan).ToListAsync();
             foreach (RepairePC pc in pcs)
             {
                 repaire.Add(new ViewRepaire(pc));
@@ -41,165 +157,26 @@ namespace PcRepaire.Controllers
                 repaire.Add(new ViewRepaire(tablet));
             }
 
-            //if (!string.IsNullOrEmpty(search)) repaire = repaire.Where(r => r.Equipment.SerialNumber.Contains(search)).ToList();
-            if (!string.IsNullOrEmpty(search)) repaire = repaire.Where(r => r.SerialNumber.Contains(search)).ToList();
-            if (filterRepairMan != 0) repaire = repaire.Where(r => r.RepaireManId == filterRepairMan).ToList();
-
-                ViewData["Sort"] = string.IsNullOrEmpty(sort) ? "dateDesc" : "";
-                switch (sort)
-                {
-                    case "dateDesc":
-                        {
-                            repaire = repaire.OrderByDescending(s => s.DateRepaire).ToList();
-                            break;
-                        }
-                    default:
-                        {
-                            repaire = repaire.OrderBy(s => s.DateRepaire).ToList();
-                            break;
-                        }
-                }
-
-            return View(repaire);
+            return repaire;
         }
 
-        // GET: RepaireLists/Details/5
-        public async Task<IActionResult> Details(int? id)
+        private List<RepaireMan> FilterRepaireMans(List<ViewRepaire> repaires)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
+            //filter repaire mans
+            int[] idWorker = repaires.GroupBy(g => g.RepaireManId).Select(w => w.Key).ToArray();
+            List<RepaireMan> repaireMens = new List<RepaireMan>();
+            foreach (int id in idWorker)
+                repaireMens.Add(_context.RepaireMen.FirstOrDefault(w => w.Id == id));
 
-            //var repaireLists = await _context.RepaireLists
-            //    .Include(r => r.Equipment)
-            //    .Include(r => r.RepaireMan)
-            //    .FirstOrDefaultAsync(m => m.Id == id);
-            //if (repaireLists == null)
-            //{
-            //    return NotFound();
-            //}
-
-            return View();
+            return repaireMens;
         }
 
-        // GET: RepaireLists/Create
-        public IActionResult Create()
+        private async Task<int> MaxIdRepaire ()
         {
-            ViewData["EquipmentId"] = new SelectList(_context.Equipments, "Id", "Discriminator");
-            ViewData["RepaireManId"] = new SelectList(_context.RepaireMen, "Id", "Discriminator");
-            return View();
+            List<int> ids = await _context.RepairePCs.Select(s => s.Id).ToListAsync();
+            ids.AddRange(await _context.RepaireTablets.Select(s => s.Id).ToListAsync());
+            return  ids.Max() + 1;
         }
 
-        // POST: RepaireLists/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EquipmentId,RepaireManId,DateRepaire,SoftWare,HardWare")] RepaireLists repaireLists)
-        {
-            //if (ModelState.IsValid)
-            //{
-            //    _context.Add(repaireLists);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //ViewData["EquipmentId"] = new SelectList(_context.Equipments, "Id", "Discriminator", repaireLists.EquipmentId );
-            //ViewData["RepaireManId"] = new SelectList(_context.RepaireMen, "Id", "Discriminator", repaireLists.RepaireManId);
-            return View();
-        }
-
-        // GET: RepaireLists/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var repaireLists = await _context.RepaireLists.FindAsync(id);
-            //if (repaireLists == null)
-            //{
-            //    return NotFound();
-            //}
-            //ViewData["EquipmentId"] = new SelectList(_context.Equipments, "Id", "Discriminator", repaireLists.EquipmentId );
-            //ViewData["RepaireManId"] = new SelectList(_context.RepaireMen, "Id", "Discriminator", repaireLists.RepaireManId);
-            return View();
-        }
-
-        // POST: RepaireLists/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EquipmentId,RepaireManId,DateRepaire,SoftWare,HardWare")] RepaireLists repaireLists)
-        {
-            //if (id != repaireLists.Id)
-            //{
-            //    return NotFound();
-            //}
-
-            //if (ModelState.IsValid)
-            //{
-            //    try
-            //    {
-            //        _context.Update(repaireLists);
-            //        await _context.SaveChangesAsync();
-            //    }
-            //    catch (DbUpdateConcurrencyException)
-            //    {
-            //        if (!RepaireListsExists(repaireLists.Id))
-            //        {
-            //            return NotFound();
-            //        }
-            //        else
-            //        {
-            //            throw;
-            //        }
-            //    }
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //ViewData["EquipmentId"] = new SelectList(_context.Equipments, "Id", "Discriminator", repaireLists.EquipmentId );
-            //ViewData["RepaireManId"] = new SelectList(_context.RepaireMen, "Id", "Discriminator", repaireLists.RepaireManId);
-            return View(repaireLists);
-        }
-
-        // GET: RepaireLists/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var repaireLists = await _context.RepaireLists
-            //    .Include(r => r.Equipment)
-            //    .Include(r => r.RepaireMan)
-            //    .FirstOrDefaultAsync(m => m.Id == id);
-            //if (repaireLists == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return View(repaireLists);
-            return View();
-        }
-
-        // POST: RepaireLists/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            //var repaireLists = await _context.RepaireLists.FindAsync(id);
-            //_context.RepaireLists.Remove(repaireLists);
-            //await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool RepaireListsExists(int id)
-        {
-            return true;
-            //return _context.RepaireLists.Any(e => e.Id == id);
-        }
     }
 }
