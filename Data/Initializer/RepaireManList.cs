@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using PcRepaire.Models;
+﻿using PcRepaire.Models;
 namespace PcRepaire.Data.Initializer
 {
     public class RepaireManList

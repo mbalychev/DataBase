@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
-using System.Linq;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PcRepaire.Models
 {
@@ -19,6 +16,6 @@ namespace PcRepaire.Models
         [DisplayName("Full name")]
         public string FullName => FirstName + " " + LastName;
 
-       
+
     }
 }

@@ -17,7 +17,7 @@ namespace PcRepaire.Models
         public DateTime DateRepaire { get; set; }
         [DisplayName("Was fix Software")]
         public bool SoftWare { get; set; }
-           
+
 
     }
 }

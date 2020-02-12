@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace PcRepaire.Models.ViewModels
 {
@@ -15,7 +11,7 @@ namespace PcRepaire.Models.ViewModels
         public string WorkerName { get; set; }
 
 
-        public ViewRepaire(int id, string type, string model, string serialNumber, string workerName) 
+        public ViewRepaire(int id, string type, string model, string serialNumber, string workerName)
         {
             Id = id;
             Type = type;
@@ -35,7 +31,7 @@ namespace PcRepaire.Models.ViewModels
             this.Model = pc.Pc.Model;
         }
 
-        public ViewRepaire (RepaireTablet tablet)
+        public ViewRepaire(RepaireTablet tablet)
         {
             this.Id = tablet.Id;
             this.DateRepaire = tablet.DateRepaire;
@@ -44,6 +40,6 @@ namespace PcRepaire.Models.ViewModels
             this.SerialNumber = tablet.Tablet.SerialNumber;
             this.Type = "Tablet";
             this.Model = tablet.Tablet.Model;
-        } 
+        }
     }
 }

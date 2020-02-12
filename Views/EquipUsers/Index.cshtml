@@ -18,7 +18,10 @@
         </div>
     </div>
 </form>
-<label class="alert-danger error-div">@ViewData["Message"]</label>
+@if (@ViewData["Message"] != null)
+{
+    <label class="alert-danger error-div">@ViewData["Message"]</label>
+}
 <table class="table text-center">
     <thead>
         <tr>

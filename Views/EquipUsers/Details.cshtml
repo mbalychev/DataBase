@@ -23,11 +23,11 @@
             @Html.DisplayFor(model => model.FirstName)
         </dd>
         <dt class="col-sm-2">
-            Use personal computers
+            Use pc
         </dt>
         <dd class="col-sm-10">
             <ul>
-                @if (Model.Pcs != null)
+                @if (Model.Pcs.Count != 0)
                 {
                     @foreach (Equipment equipment in Model.Pcs)
                     {

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using PcRepaire.Models;
+﻿using PcRepaire.Models;
+using System;
 
 namespace PcRepaire.Data.Initializer
 {
-    public class RepaireTabletsList 
+    public class RepaireTabletsList
     {
         public static RepaireTablet[] CreateRepaireTablets()
         {

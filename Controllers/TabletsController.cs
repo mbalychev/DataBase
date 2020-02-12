@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PcRepaire.Data;
 using PcRepaire.Models;
-
+using System.Linq;
+using System.Threading.Tasks;
 namespace PcRepaire.Controllers
 {
+    [Authorize]
     public class TabletsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -36,8 +35,8 @@ namespace PcRepaire.Controllers
             switch (sort)
             {
                 case "ModelDesc":
-                        tablets = tablets.OrderByDescending(o => o.Model);
-                        break;
+                    tablets = tablets.OrderByDescending(o => o.Model);
+                    break;
                 default:
                     tablets = tablets.OrderBy(o => o.Model);
                     break;
@@ -47,7 +46,7 @@ namespace PcRepaire.Controllers
         }
 
         // GET: Tablets/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string link)
         {
             if (id == null)
             {
@@ -65,9 +64,11 @@ namespace PcRepaire.Controllers
                 return RedirectToAction(nameof(Index), new { message = "NotFound" });
             }
 
+            ViewData["BackLink"] = link;
             return View(tablet);
         }
 
+        [Authorize(Roles = "admin")]
         // GET: Tablets/Create
         public IActionResult Create()
         {
@@ -80,6 +81,7 @@ namespace PcRepaire.Controllers
         // POST: Tablets/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Model,SerialNumber,SoftWareId,EquipUserId,ManufactureId")] Tablet tablet)
@@ -101,6 +103,7 @@ namespace PcRepaire.Controllers
         }
 
         // GET: Tablets/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -122,6 +125,7 @@ namespace PcRepaire.Controllers
         // POST: Tablets/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Model,SerialNumber,SoftWareId,EquipUserId,ManufactureId")] Tablet tablet)
@@ -161,6 +165,7 @@ namespace PcRepaire.Controllers
         }
 
         // GET: Tablets/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -182,6 +187,7 @@ namespace PcRepaire.Controllers
         }
 
         // POST: Tablets/Delete/5
+        [Authorize(Roles = "admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -194,7 +200,7 @@ namespace PcRepaire.Controllers
                 _logger.LogInformation("deleted tablets " + tablet.Model + " " + tablet.SerialNumber);
                 return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException)
             {
                 ModelState.AddModelError("", "try a later...");
                 return View(tablet);

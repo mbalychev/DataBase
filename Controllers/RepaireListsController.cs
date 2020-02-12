@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PcRepaire.Data;
 using PcRepaire.Models;
 using PcRepaire.Models.ViewModels;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PcRepaire.Controllers
 {
+    [Authorize]
     public class RepaireListsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -61,6 +62,7 @@ namespace PcRepaire.Controllers
                 return RedirectToAction(nameof(Index), new { message = "Not found" });
             }
 
+
             switch (type)
             {
                 case "Pc":
@@ -82,6 +84,7 @@ namespace PcRepaire.Controllers
         }
 
         // GET: RepaireLists/Create
+        [Authorize(Roles = "admin")]
         public IActionResult CreatePc()
         {
             ViewData["Equipment"] = new SelectList(_context.Pcs, "Id", "Info");
@@ -92,6 +95,7 @@ namespace PcRepaire.Controllers
         // POST: RepaireLists/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePc([Bind("Id,EquipmentId,RepaireManId,DateRepaire,SoftWare,HardWare, PcId")] RepairePC repaire)
@@ -110,6 +114,7 @@ namespace PcRepaire.Controllers
         }
 
         // GET: RepaireLists/Create
+        [Authorize(Roles = "admin")]
         public IActionResult CreateTablet()
         {
             ViewData["Equipment"] = new SelectList(_context.Tablets, "Id", "Info");
@@ -120,6 +125,7 @@ namespace PcRepaire.Controllers
         // POST: RepaireLists/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateTablet([Bind("Id,EquipmentId,RepaireManId,DateRepaire,SoftWare,TabletId")] RepaireTablet repaire)
@@ -171,11 +177,11 @@ namespace PcRepaire.Controllers
             return repaireMens;
         }
 
-        private async Task<int> MaxIdRepaire ()
+        private async Task<int> MaxIdRepaire()
         {
             List<int> ids = await _context.RepairePCs.Select(s => s.Id).ToListAsync();
             ids.AddRange(await _context.RepaireTablets.Select(s => s.Id).ToListAsync());
-            return  ids.Max() + 1;
+            return ids.Max() + 1;
         }
 
     }

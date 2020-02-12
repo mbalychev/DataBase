@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PcRepaire.Data;
 using PcRepaire.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PcRepaire.Controllers
 {
@@ -29,7 +25,7 @@ namespace PcRepaire.Controllers
         {
             ViewData["Message"] = message;
             ViewData["Sort"] = string.IsNullOrEmpty(sort) ? "LastNameDesc" : "";
-            
+
             var equipUsers = _context.EquipUsers.Select(s => s);
 
             if (!string.IsNullOrEmpty(search)) equipUsers = equipUsers.Where(u => u.LastName.Contains(search));
@@ -59,7 +55,7 @@ namespace PcRepaire.Controllers
                 return RedirectToAction("Index", new { message = "not found" });
             }
 
-            var equipUser = await _context.EquipUsers.Include(i => i.Tablets).Include(i=>i.Pcs)
+            var equipUser = await _context.EquipUsers.Include(i => i.Tablets).Include(i => i.Pcs)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (equipUser == null)
             {
@@ -146,7 +142,7 @@ namespace PcRepaire.Controllers
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException except)
+                catch (DbUpdateConcurrencyException)
                 {
                     if (!EquipUserExists(equipUser.Id))
                     {

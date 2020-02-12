@@ -11,9 +11,9 @@ namespace PcRepaire.Models
         public int PageIndex { get; set; }
         public int PagesTotal { get; set; }
 
-        public PagesList (List<T> items, int count, int pageIndex, int pageSize)
+        public PagesList(List<T> items, int count, int pageIndex, int pageSize)
         {
-            
+
             PageIndex = pageIndex;
             PagesTotal = (int)Math.Ceiling(count / (double)pageSize);
             this.AddRange(items);
@@ -23,13 +23,13 @@ namespace PcRepaire.Models
 
         public bool Next => PageIndex < PagesTotal;
 
-        public static async Task<PagesList<T>> CreateAsync (IQueryable<T> source, int pageIndex, int pageSize)
+        public static async Task<PagesList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
         {
             var count = await source.CountAsync();
             var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return new PagesList<T>(items, count, pageIndex, pageSize);
         }
 
-        
+
     }
 }

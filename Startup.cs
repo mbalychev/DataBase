@@ -36,8 +36,8 @@ namespace PcRepaire
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<IdentityUser, IdentityRole>()
-                //.AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -74,6 +74,6 @@ namespace PcRepaire
             );
         }
 
-        
+
     }
 }

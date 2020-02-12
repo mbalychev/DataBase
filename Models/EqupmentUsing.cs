@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace PcRepaire.Models
 {
-    public class EqupmentUsing :Equipment
+    public class EqupmentUsing : Equipment
     {
         public int? EquipUserId { get; set; }
         [DisplayName("User")]

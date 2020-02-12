@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PcRepaire.Data;
 using PcRepaire.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PcRepaire.Controllers
 {
@@ -103,7 +102,7 @@ namespace PcRepaire.Controllers
                     _logger.LogInformation("Created Pc " + pc.Model + " " + pc.SerialNumber);
                     return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateException ex)
+                catch (DbUpdateException)
                 {
                     ModelState.AddModelError("", "Unable to save changes, Try again");
                     return View(pc);
@@ -129,7 +128,7 @@ namespace PcRepaire.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var pc = await _context.Pcs.Include(s=>s.EquipUser).FirstOrDefaultAsync(s=>s.Id == id);
+            var pc = await _context.Pcs.Include(s => s.EquipUser).FirstOrDefaultAsync(s => s.Id == id);
             if (pc == null)
             {
                 ModelState.AddModelError("", "pc not found");
@@ -138,7 +137,7 @@ namespace PcRepaire.Controllers
 
             List<SelectListItem> selects = new SelectList(_context.EquipUsers, "Id", "FullName", pc.EquipUserId).ToList();
             selects.Insert(0, (new SelectListItem { Text = "None", Value = "" }));
-            
+
             ViewData["EquipUserId"] = selects;
             ViewData["SoftWareId"] = new SelectList(_context.SoftWares, "Id", "Name", pc.SoftWareId);
             ViewData["HardWareId"] = new SelectList(_context.HardWares, "Id", "HardType", pc.HardWareId);

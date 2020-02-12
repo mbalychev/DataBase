@@ -2,11 +2,10 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PcRepaire.Models;
-using PcRepaire.Models.ViewModels;
 
 namespace PcRepaire.Data
 {
-    public class ApplicationDbContext : IdentityDbContext <IdentityUser, IdentityRole, string, IdentityUserClaim<string>, 
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string, IdentityUserClaim<string>,
         IdentityUserRole<string>, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         private static ApplicationDbContext _context;
