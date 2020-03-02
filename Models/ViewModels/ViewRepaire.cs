@@ -2,7 +2,7 @@
 
 namespace PcRepaire.Models.ViewModels
 {
-    public class ViewRepaire : RepaireLists
+    public class ViewRepaire : RepaireList
     {
         public string SerialNumber { get; set; }
         [DisplayName("Type")]

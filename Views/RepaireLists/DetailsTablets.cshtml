@@ -1,7 +1,7 @@
 ﻿@model PcRepaire.Models.RepaireTablet
 
 <div>
-    <h4>RepaireTablet</h4>
+    <h4>RepaireTablets</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -33,6 +33,12 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.RepaireMan.FullName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RepaireMan.Experience)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RepaireMan.Experience)
         </dd>
     </dl>
 </div>

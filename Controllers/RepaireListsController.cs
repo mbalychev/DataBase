@@ -67,12 +67,20 @@ namespace PcRepaire.Controllers
             {
                 case "Pc":
                     {
-                        RepairePC repairePC = await _context.RepairePCs.Include(i => i.Pc).Include(r => r.RepaireMan).Select(s => s).FirstOrDefaultAsync(r => r.Id == id);
+                        RepairePC repairePC = await 
+                            _context.RepairePCs
+                            .Include(i => i.Pc)
+                            .Include(r => r.RepaireMan).ThenInclude(r=>r.RepaireLists)
+                            .Select(s => s).FirstOrDefaultAsync(r => r.Id == id);
                         return View("DetailsPc", repairePC);
                     }
                 case "Tablet":
                     {
-                        RepaireTablet repaireTablet = await _context.RepaireTablets.Include(i => i.Tablet).Include(r => r.RepaireMan).Select(s => s).FirstOrDefaultAsync(r => r.Id == id);
+                        RepaireTablet repaireTablet = await 
+                            _context.RepaireTablets
+                            .Include(i => i.Tablet)
+                            .Include(r => r.RepaireMan).ThenInclude(r => r.RepaireLists)
+                            .Select(s => s).FirstOrDefaultAsync(r => r.Id == id);
                         return View("DetailsTablets", repaireTablet);
                     }
                 default:

@@ -2,7 +2,7 @@
 
 namespace PcRepaire.Models
 {
-    public class RepairePC : RepaireLists
+    public class RepairePC : RepaireList
     {
         [DisplayName("Was fix Hardware")]
         public bool HardWare { get; set; }
