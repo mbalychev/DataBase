@@ -72,6 +72,7 @@ namespace PcRepaire.Controllers
             }
 
             return View(pc);
+            return View();
         }
 
         // GET: Pcs/Create
@@ -128,21 +129,24 @@ namespace PcRepaire.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var pc = await _context.Pcs.Include(s => s.EquipUser).FirstOrDefaultAsync(s => s.Id == id);
-            if (pc == null)
-            {
-                ModelState.AddModelError("", "pc not found");
-                return RedirectToAction(nameof(Index));
-            }
+            //var pc = await _context.Pcs.Include(s => s.EquipUser).FirstOrDefaultAsync(s => s.Id == id);
 
-            List<SelectListItem> selects = new SelectList(_context.EquipUsers, "Id", "FullName", pc.EquipUserId).ToList();
-            selects.Insert(0, (new SelectListItem { Text = "None", Value = "" }));
 
-            ViewData["EquipUserId"] = selects;
-            ViewData["SoftWareId"] = new SelectList(_context.SoftWares, "Id", "Name", pc.SoftWareId);
-            ViewData["HardWareId"] = new SelectList(_context.HardWares, "Id", "HardType", pc.HardWareId);
-            ViewData["Manufature"] = new SelectList(_context.Manufactures, "Id", "Name", pc.ManufactureId);
-            return View(pc);
+            //if (pc == null)
+            //{
+            //    ModelState.AddModelError("", "pc not found");
+            //    return RedirectToAction(nameof(Index));
+            //}
+
+            //List<SelectListItem> selects = new SelectList(_context.EquipUsers, "Id", "FullName", pc.EquipUserId).ToList();
+            //selects.Insert(0, (new SelectListItem { Text = "None", Value = "" }));
+
+            //ViewData["EquipUserId"] = selects;
+            //ViewData["SoftWareId"] = new SelectList(_context.SoftWares, "Id", "Name", pc.SoftWareId);
+            //ViewData["HardWareId"] = new SelectList(_context.HardWares, "Id", "HardType", pc.HardWareId);
+            //ViewData["Manufature"] = new SelectList(_context.Manufactures, "Id", "Name", pc.ManufactureId);
+            //return View(pc);
+            return View();
         }
 
         // POST: Pcs/Edit/5
@@ -210,19 +214,20 @@ namespace PcRepaire.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var pc = await _context.Pcs
-                .Include(p => p.EquipUser)
-                .Include(p => p.Manufacture)
-                .Include(p => p.SoftWare)
-                .Include(p => p.HardWare)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (pc == null)
-            {
-                ModelState.AddModelError("", "pc not found");
-                return RedirectToAction(nameof(Index));
-            }
+            //var pc = await _context.Pcs
+            //    .Include(p => p.EquipUser)
+            //    .Include(p => p.Manufacture)
+            //    .Include(p => p.SoftWare)
+            //    .Include(p => p.HardWare)
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+            //if (pc == null)
+            //{
+            //    ModelState.AddModelError("", "pc not found");
+            //    return RedirectToAction(nameof(Index));
+            //}
 
-            return View(pc);
+            //return View(pc);
+            return View();
         }
 
         // POST: Pcs/Delete/5
@@ -231,25 +236,28 @@ namespace PcRepaire.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var pc = await _context.Pcs.FindAsync(id);
-            try
-            {
-                _context.Pcs.Remove(pc);
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("Deleted Pc " + pc.Model + " " + pc.SerialNumber);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (DbUpdateException ex)
-            {
-                _logger.LogError("Exception on delete Pc: " + ex.Message);
-                ModelState.AddModelError("", "Error on Delete Pc");
-                return View(pc);
-            }
+            //var pc = await _context.Pcs.FindAsync(id);
+            //try
+            //{
+            //    _context.Pcs.Remove(pc);
+            //    await _context.SaveChangesAsync();
+            //    _logger.LogInformation("Deleted Pc " + pc.Model + " " + pc.SerialNumber);
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //catch (DbUpdateException ex)
+            //{
+            //    _logger.LogError("Exception on delete Pc: " + ex.Message);
+            //    ModelState.AddModelError("", "Error on Delete Pc");
+            //    return View(pc);
+            //}
+            //return View(pc);
+            return View();
         }
 
         private bool PcExists(int id)
         {
-            return _context.Pcs.Any(e => e.Id == id);
+            //   return _context.Pcs.Any(e => e.Id == id);
+            return true;
         }
     }
 }

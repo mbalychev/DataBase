@@ -24,6 +24,8 @@ namespace PcRepaire.Data
         public DbSet<RepairePC> RepairePCs { get; set; }
         public DbSet<RepaireTablet> RepaireTablets { get; set; }
         public DbSet<Pc> Pcs { get; set; }
+        public DbSet<Desctop> Desctops { get; set; }
+        public DbSet<ThinkClient> ThinkClients { get; set; }
         public DbSet<Tablet> Tablets { get; set; }
         public DbSet<RepaireMan> RepaireMen { get; set; }
         public DbSet<EquipUser> EquipUsers { get; set; }

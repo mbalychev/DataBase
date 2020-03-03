@@ -18,6 +18,5 @@ namespace PcRepaire.Models
         [DisplayName("Was fix Software")]
         public bool SoftWare { get; set; }
 
-
     }
 }

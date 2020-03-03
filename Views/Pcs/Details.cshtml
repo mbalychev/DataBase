@@ -8,12 +8,18 @@
 
 <div>
     <hr />
-    <dl class="row" >
+    <dl class="row">
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Manufacture.Name)
         </dt>
         <dd class="col-sm-9">
             @Html.DisplayFor(model => model.Manufacture.Name)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Discriminator)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Discriminator)
         </dd>
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Model)
@@ -38,6 +44,12 @@
         </dt>
         <dd class="col-sm-9">
             @Html.DisplayFor(model => model.HardWare.HardType)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.SpeedI)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.SpeedI)
         </dd>
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.EquipUser.FullName)

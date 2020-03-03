@@ -27,7 +27,7 @@ namespace PcRepaire.Models.ViewModels
             this.RepaireManId = pc.RepaireManId;
             this.RepaireMan = pc.RepaireMan;
             this.SerialNumber = pc.Pc.SerialNumber;
-            this.Type = "Pc";
+            this.Type = pc.Pc.Discriminator;
             this.Model = pc.Pc.Model;
         }
 

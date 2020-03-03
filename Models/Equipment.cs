@@ -18,6 +18,7 @@ namespace PcRepaire.Models
         public SoftWare SoftWare { get; set; }
         public int ManufactureId { get; set; }
         public Manufacture Manufacture { get; set; }
+        public string Discriminator { get; set; }
         [DisplayName("Equipment info")]
         public string Info => "Model: " + Model + " Sn: " + SerialNumber;
 

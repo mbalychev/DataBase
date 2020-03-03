@@ -62,21 +62,29 @@ namespace PcRepaire.Controllers
                 return RedirectToAction(nameof(Index), new { message = "Not found" });
             }
 
-
             switch (type)
             {
-                case "Pc":
+                case "Desctop":
                     {
-                        RepairePC repairePC = await 
+                        RepairePC repairePC = await
                             _context.RepairePCs
                             .Include(i => i.Pc)
-                            .Include(r => r.RepaireMan).ThenInclude(r=>r.RepaireLists)
+                            .Include(r => r.RepaireMan).ThenInclude(r => r.RepaireLists)
+                            .Select(s => s).FirstOrDefaultAsync(r => r.Id == id);
+                        return View("DetailsPc", repairePC);
+                    }
+                case "ThinkClient":
+                    {
+                        RepairePC repairePC = await
+                            _context.RepairePCs
+                            .Include(i => i.Pc)
+                            .Include(r => r.RepaireMan).ThenInclude(r => r.RepaireLists)
                             .Select(s => s).FirstOrDefaultAsync(r => r.Id == id);
                         return View("DetailsPc", repairePC);
                     }
                 case "Tablet":
                     {
-                        RepaireTablet repaireTablet = await 
+                        RepaireTablet repaireTablet = await
                             _context.RepaireTablets
                             .Include(i => i.Tablet)
                             .Include(r => r.RepaireMan).ThenInclude(r => r.RepaireLists)
@@ -95,7 +103,8 @@ namespace PcRepaire.Controllers
         [Authorize(Roles = "admin")]
         public IActionResult CreatePc()
         {
-            ViewData["Equipment"] = new SelectList(_context.Pcs, "Id", "Info");
+            
+            //ViewData["Equipment"] = new SelectList(_context.Pcs, "Id", "Info");
             ViewData["RepaireMan"] = new SelectList(_context.RepaireMen, "Id", "FullName");
             return View();
         }
@@ -116,7 +125,7 @@ namespace PcRepaire.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Equipment"] = new SelectList(_context.Pcs, "Id", "Info");
+            //ViewData["Equipment"] = new SelectList(_context.Pcs, "Id", "Info");
             ViewData["RepaireMan"] = new SelectList(_context.RepaireMen, "Id", "FullName");
             return View("CreatePc");
         }

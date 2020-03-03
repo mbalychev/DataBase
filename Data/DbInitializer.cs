@@ -84,18 +84,22 @@ namespace PcRepaire.Data
         {
             EquipUser[] equipUsers = Initializer.EquipUsersList.CreateEquipUsersList();
             RepaireMan[] repaireMens = Initializer.RepaireManList.CreateRepaireMen();
-            Pc[] pcs = Initializer.PcList.CreatePcLists();
+            //Pc[] pcs = Initializer.PcList.CreatePcList();
+            Desctop[] dsc = Initializer.PcList.CreateDesctopsList();
+            ThinkClient[] tCli = Initializer.PcList.CreateThinkClientsList();
             Tablet[] tablets = Initializer.TabletsList.CreateTabletsList();
             SoftWare[] softWares = Initializer.SoftWareList.CreateSoftWares();
             HardWare[] hardWares = Initializer.HardWareList.CreateHardWares();
             RepairePC[] repairPc = Initializer.RepairPcsList.CreateRepairPcs();
             RepaireTablet[] repaireTablets = Initializer.RepaireTabletsList.CreateRepaireTablets();
             Manufacture[] manufactures = Initializer.ManufactureList.CreateManufactures();
-            try
-            {
+            //try
+            //{
 
                 foreach (Tablet tablet in tablets) { _context.Tablets.Add(tablet); }
-                foreach (Pc pc in pcs) { _context.Pcs.Add(pc); }
+                //foreach (Pc pc in pcs) { _context.Pcs.Add(pc); }
+                foreach (Desctop th in dsc) { _context.Desctops.Add(th); }
+                foreach (ThinkClient cl in tCli) { _context.ThinkClients.Add(cl); }
                 foreach (SoftWare soft in softWares) { _context.SoftWares.Add(soft); }
                 foreach (HardWare hard in hardWares) { _context.HardWares.Add(hard); }
                 foreach (EquipUser equipUser in equipUsers) { _context.EquipUsers.Add(equipUser); }
@@ -103,14 +107,14 @@ namespace PcRepaire.Data
                 foreach (RepairePC repaire in repairPc) { _context.RepairePCs.Add(repaire); }
                 foreach (RepaireTablet repaire in repaireTablets) { _context.RepaireTablets.Add(repaire); }
                 foreach (Manufacture manufacture in manufactures) { _context.Manufactures.Add(manufacture); }
-
                 await _context.SaveChangesAsync();
+
                 _logger.LogInformation("DataBase... created");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation(ex.Message);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.LogInformation(ex.Message);
+            //}
 
         }
 
